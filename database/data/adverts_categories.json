@@ -1,0 +1,7 @@
+[
+    {"category_name": "Display", "is_active": true},
+    {"category_name": "Video", "is_active": true},
+    {"category_name": "Native", "is_active": true},
+    {"category_name": "Mobile", "is_active": true},
+    {"category_name": "Social Media", "is_active": true}
+]

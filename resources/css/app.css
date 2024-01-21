@@ -1,0 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+    @apply shadow-md py-3 px-6 rounded-md transition duration-300;
+}
+
+.btn-purple {
+    @apply bg-bringlu-purple text-white;
+}
+
+.btn-white {
+    @apply bg-bringlu-white;
+}
+
+.bringlu-input-plain {
+    @apply appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-2 mb-2 leading-tight focus:outline-none focus:bg-white;
+}
+
+.bringlu-label-plain {
+    @apply block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2;
+}
+
+.active-badge {
+    @apply bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900;
+}
+
+.disabled-badge {
+    @apply bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-200 dark:text-red-900;
+}
+
+.show-link {
+        @apply underline text-blue-600 hover:text-blue-800 visited:text-purple-600
+}
+
+.high-priority {
+    @apply bg-blue-600 text-white text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900;
+}
+
+.medium-priority {
+    @apply bg-yellow-300 text-white text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900;
+}
+
+.low-priority {
+    @apply bg-gray-200 text-white text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900;
+}
+
+.all-ads {
+    @apply bg-black text-white text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900;
+}
+
+.confirm-button {
+    @apply bg-white border-slate-600 border border-green-400 text-green-400 rounded-md px-4 py-2 hover:bg-green-400 hover:text-green-600
+}
+
+.reject-button {
+    @apply bg-white border-slate-600 border border-red-400 text-red-400 rounded-md px-4 py-2 hover:bg-red-400 hover:text-red-600
+}

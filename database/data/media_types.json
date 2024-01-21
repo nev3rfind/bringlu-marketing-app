@@ -1,0 +1,10 @@
+[
+    {"media_name": "Facebook", "is_active": true},
+    {"media_name": "Instagram", "is_active": true},
+    {"media_name": "Twitter", "is_active": true},
+    {"media_name": "LinkedIn", "is_active": true},
+    {"media_name": "Snapchat", "is_active": true},
+    {"media_name": "Pinterest", "is_active": true},
+    {"media_name": "Other", "is_active": true}
+
+]
