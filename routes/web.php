@@ -33,6 +33,7 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
     Route::put('/business/ads/{user}/pending/reject/{advert}', 'App\Http\Controllers\BusinessController@rejectPending')->name('adverts.pending.reject');
     Route::get('/business/ads/active', 'App\Http\Controllers\BusinessController@showActive')->name('adverts.active');
     Route::get('/business/ads/all', 'App\Http\Controllers\BusinessController@showAll')->name('adverts.all');
+    Route::get('/business/clients', 'App\Http\Controllers\ClientsController@showAll')->name('clients.all');
 });
 
 // Advertiser customer routes
