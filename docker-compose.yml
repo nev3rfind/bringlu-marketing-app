@@ -9,6 +9,7 @@ services:
     volumes:
       - .:/var/www/html
       - ./storage:/var/www/html/storage
+      - node_modules:/var/www/html/node_modules
     networks:
       - bringlu-network
     depends_on:
@@ -66,4 +67,6 @@ networks:
 
 volumes:
   dbdata:
+    driver: local
+  node_modules:
     driver: local
