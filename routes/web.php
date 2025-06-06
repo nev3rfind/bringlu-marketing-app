@@ -34,7 +34,7 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
     Route::get('/business/ads/active', 'App\Http\Controllers\BusinessController@showActive')->name('adverts.active');
     Route::get('/business/ads/all', 'App\Http\Controllers\BusinessController@showAll')->name('adverts.all');
     
-    // Client Management Routes
+    // Client Management Routes - Protected by business middleware
     Route::get('/business/clients', 'App\Http\Controllers\ClientsController@showAll')->name('clients.all');
     Route::get('/business/clients/{client}/dashboard', 'App\Http\Controllers\ClientsController@manageDashboard')->name('clients.dashboard');
     Route::put('/business/clients/{client}/dashboard', 'App\Http\Controllers\ClientsController@updateDashboard')->name('clients.dashboard.update');
