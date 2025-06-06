@@ -63,6 +63,18 @@
                 <p class="text-xl text-center pb-2">Check <span class="all-ads">all</span> adverts</p>
               </a>
             </div>
+            <!-- Manage clients -->
+            <div class="col-span-6 p-2 bg-grey rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl">
+              <a href="{{ route('clients.all') }}">
+                <div class="flex justify-center items-center text-7xl py-4">
+                  <i class="fa-solid fa-users"></i>
+                </div>
+                <p class="text-xl text-center pb-2">Manage <span class="text-orange-500">Clients</span></p>
+              </a>
+            </div>
+            <!-- Spacer -->
+            <div class="col-span-6"></div>
+            
             <div class="col-span-12 p-4 bg-grey rounded-xl shadow-lg">
               <div class="p-2">
                 <h2 class="font-bold text-3xl mb-2 text-center">My created adverts campaigns</h2>

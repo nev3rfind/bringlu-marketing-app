@@ -33,6 +33,16 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
     Route::put('/business/ads/{user}/pending/reject/{advert}', 'App\Http\Controllers\BusinessController@rejectPending')->name('adverts.pending.reject');
     Route::get('/business/ads/active', 'App\Http\Controllers\BusinessController@showActive')->name('adverts.active');
     Route::get('/business/ads/all', 'App\Http\Controllers\BusinessController@showAll')->name('adverts.all');
+    
+    // Client Management Routes
+    Route::get('/business/clients', 'App\Http\Controllers\ClientsController@showAll')->name('clients.all');
+    Route::get('/business/clients/{client}/dashboard', 'App\Http\Controllers\ClientsController@manageDashboard')->name('clients.dashboard');
+    Route::put('/business/clients/{client}/dashboard', 'App\Http\Controllers\ClientsController@updateDashboard')->name('clients.dashboard.update');
+    Route::get('/business/clients/{client}/forms', 'App\Http\Controllers\ClientsController@manageForms')->name('clients.forms');
+    Route::get('/business/clients/{client}/forms/create', 'App\Http\Controllers\ClientsController@createForm')->name('clients.forms.create');
+    Route::post('/business/clients/{client}/forms', 'App\Http\Controllers\ClientsController@storeForm')->name('clients.forms.store');
+    Route::get('/business/clients/{client}/forms/{form}/edit', 'App\Http\Controllers\ClientsController@editForm')->name('clients.forms.edit');
+    Route::put('/business/clients/{client}/forms/{form}', 'App\Http\Controllers\ClientsController@updateForm')->name('clients.forms.update');
 });
 
 // Advertiser customer routes
@@ -48,6 +58,11 @@ Route::prefix('/advertiser')->middleware('auth', 'authorise-adv')->group(functio
     ->middleware(['throttle:advertRequests'])->name('advert.request');
     // Advert details conversion to PDF route
     Route::get('convert/{advert}', 'App\Http\Controllers\AdvertiserController@convertToPdf')->name('advert.topdf');
+    
+    // Client dashboard routes
+    Route::get('/dashboard', 'App\Http\Controllers\ClientsController@clientDashboard')->name('advertiser.dashboard');
+    Route::get('/forms/{form}', 'App\Http\Controllers\ClientsController@showClientForm')->name('advertiser.form.show');
+    Route::post('/forms/{form}/submit', 'App\Http\Controllers\ClientsController@submitForm')->name('advertiser.form.submit');
 });
 
 // GitHub Authentication Routes
