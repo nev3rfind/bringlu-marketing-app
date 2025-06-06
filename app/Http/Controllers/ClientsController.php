@@ -5,10 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\User;
-use App\Models\ClientDashboard;
-use App\Models\DashboardHistory;
-use App\Models\ClientForm;
-use Carbon\Carbon;
 
 class ClientsController extends Controller
 {
@@ -23,5 +19,37 @@ class ClientsController extends Controller
         $clients = User::where('account_type', 1)->get();
         
         return view('business.clients.index', compact('clients'));
+    }
+
+    /**
+     * Show dashboard for a specific client
+     *
+     * @param User $client
+     * @return \Illuminate\Http\Response
+     */
+    public function dashboard(User $client)
+    {
+        // Ensure the client is an advertiser
+        if ($client->account_type !== 1) {
+            abort(404);
+        }
+
+        return view('business.clients.dashboard', compact('client'));
+    }
+
+    /**
+     * Show forms for a specific client
+     *
+     * @param User $client
+     * @return \Illuminate\Http\Response
+     */
+    public function forms(User $client)
+    {
+        // Ensure the client is an advertiser
+        if ($client->account_type !== 1) {
+            abort(404);
+        }
+
+        return view('business.clients.forms', compact('client'));
     }
 }

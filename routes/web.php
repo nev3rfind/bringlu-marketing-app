@@ -5,6 +5,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\AdvertiserController;
 use App\Http\Controllers\SocialController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ClientsController;
 use Illuminate\Http\Request;
 
 /*
@@ -34,7 +35,10 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
     Route::get('/business/ads/active', 'App\Http\Controllers\BusinessController@showActive')->name('adverts.active');
     Route::get('/business/ads/all', 'App\Http\Controllers\BusinessController@showAll')->name('adverts.all');
     
-    Route::get('/business/clients', 'App\Http\Controllers\ClientsController@showAll')->name('clients.all');
+    // Fixed clients routes
+    Route::get('/business/clients', [ClientsController::class, 'showAll'])->name('clients.all');
+    Route::get('/business/clients/{client}/dashboard', [ClientsController::class, 'dashboard'])->name('clients.dashboard');
+    Route::get('/business/clients/{client}/forms', [ClientsController::class, 'forms'])->name('clients.forms');
 });
 
 // Advertiser customer routes
