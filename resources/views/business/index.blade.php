@@ -9,158 +9,284 @@
                 <div class="my-4">
                   <a role='button' href='#' class="text-white bg-green-500 px-3 py-1 rounded-md hover:bg-purple-700">Business customer <i class="fa-solid fa-briefcase"></i></a>
                 </div>
-                  <p class="text-lg text-gray-600">Dashbord
+                  <p class="text-lg text-gray-600">Manage referral forms and track submissions from your clients
                   </p>
             </div>
           </div>
          <!-- Activity card -->
          <div class="col-span-4 p-2 bg-grey rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl">
             <div class="p-2">
-            <h2 class="font-bold text-3xl mb-2 text-center">Recent activity</h2>
-              <p class="text-lg text-gray-600">Count of <span class="medium-priority">pending</span>adverts: <span class="font-bold">{{ $requestsCount['pending'] }}</span></p>
-              <p class="text-lg text-gray-600">Count of <span class="disabled-badge">rejected</span> adverts: <span class="font-bold">{{ $requestsCount['rejected'] }}</span></p>
-              <p class="text-lg text-gray-600">Count of <span class="high-priority">confirmed</span>adverts: <span class="font-bold">{{ $requestsCount['confirmed'] }}</span></p>
-              <p class="text-lg text-gray-600"><span class="font-bold">Total</span> <span class="all-ads">all</span>adverts: <span class="font-bold">{{ $requestsCount['all'] }}</span></p>
-              <p class="text-lg text-gray-600"><span class="font-bold">Total</span> adverts campaigns views:<span class="font-bold"> {{ $campaignsViews }}</span></p>
-              <p class="text-lg text-gray-600"><span class="font-bold">Total</span> created adverts campaigns:<span class="font-bold"> {{ $advertsCount }}</span></p>
+            <h2 class="font-bold text-3xl mb-2 text-center">Referral Statistics</h2>
+              <p class="text-lg text-gray-600">Pending forms: <span class="font-bold text-yellow-600">{{ $referralStats['pending'] }}</span></p>
+              <p class="text-lg text-gray-600">Accepted forms: <span class="font-bold text-green-600">{{ $referralStats['accepted'] }}</span></p>
+              <p class="text-lg text-gray-600">Rejected forms: <span class="font-bold text-red-600">{{ $referralStats['rejected'] }}</span></p>
+              <p class="text-lg text-gray-600">Viewed forms: <span class="font-bold text-blue-600">{{ $referralStats['viewed'] }}</span></p>
+              <p class="text-lg text-gray-600">Unviewed forms: <span class="font-bold text-red-500">{{ $referralStats['unviewed'] }}</span></p>
+              <p class="text-lg text-gray-600"><span class="font-bold">Total</span> forms: <span class="font-bold">{{ $referralStats['total'] }}</span></p>
             </div>
           </div>
-          <!-- Create ad card -->
-            <div class="col-span-3 p-2 bg-grey rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl">
-              <a href="{{url('business/create')}}">
-                <div class="flex justify-center items-center text-8xl">
-                  <i class="fa-solid fa-plus"></i>
-                </div>
-                <p class="text-2xl text-center pt-2">Create advert</p>
-              </a>
-            </div>
-            <!-- Check pending adverts -->
-            <div class="col-span-3 p-2 bg-grey rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl">
-              <a href="{{route('adverts.pending')}}">
-                <div class="flex justify-center items-center text-7xl py-4 ">
-                <i class="fa-solid fa-clock"></i>
-                </div>
-                <p class="text-xl text-center pb-2">Check <span class="medium-priority">pending</span> adverts</p>
-              </a>
-            </div>
-             <!-- Check active adverts -->
-             <div class="col-span-3 p-2 bg-grey rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl">
-             <a href="{{route('adverts.active')}}">
-                <div class="flex justify-center items-center text-7xl py-4">
-                <i class="fa-solid fa-circle-check"></i>
-                </div>
-                <p class="text-xl text-center pb-2">Check <span class="high-priority">active</span> adverts</p>
-              </a>
-            </div>
-            <!-- Check all adverts -->
-            <div class="col-span-3 p-2 bg-grey rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl">
-            <a href="{{route('adverts.all')}}">
-                <div class="flex justify-center items-center text-7xl py-4">
-                <i class="fa-solid fa-rectangle-ad"></i>
-                </div>
-                <p class="text-xl text-center pb-2">Check <span class="all-ads">all</span> adverts</p>
-              </a>
-            </div>
-            <div class="col-span-12 p-4 bg-grey rounded-xl shadow-lg">
+
+          <!-- Referral Forms Table -->
+          <div class="col-span-12 p-4 bg-grey rounded-xl shadow-lg">
               <div class="p-2">
-                <h2 class="font-bold text-3xl mb-2 text-center">My created adverts campaigns</h2>
+                  <h2 class="font-bold text-3xl mb-2 text-center">All Referral Forms</h2>
               </div>
               <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
-                <div class="overflow-y h-72">
-                  <table class="table-auto overflow-scroll w-full text-sm text-left text-gray-500">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                      <tr class="uppercase">
-                        <th scope="col" class="py-3 px-6">
-                            Advert Title
-                        </th>
-                        <th scope="col" class="py-3 px-6">
-                            Industry
-                        </th>
-                        <th scope="col" class="py-3 px-6">
-                            Start date
-                        </th>
-                        <th scope="col" class="py-3 px-6">
-                            End date
-                        </th>
-                        <th scope="col" class="py-3 px-6 text-center">
-                            Current status
-                        </th>
-                        <th scope="col" class="py-3 px-6 text-center">
-                            Max adv. count
-                        </th>
-                        <th scope="col" class="py-3 px-6 text-center">
-                            Last updated
-                        </th>
-                        <th scope="col" class="py-3 px-6">
-                            Action
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @foreach($adverts as $advert)
-                      <tr class="bg-white border-b ">
-                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap show-link">
-                          <a href="{{ route('business.show', $advert->id) }}"> {{$advert->advert_name}} </a>
-                        </th>
-                        <td class="py-4 px-6">
-                        {{$advert->industry}}
-                        </td>
-                        <td class="py-4 px-6">
-                        {{$advert->start_date}}
-                        </td>
-                        <td class="py-4 px-6">
-                        {{$advert->end_date}}
-                        </td>
-                        <td class="py-4 px-6 text-center">
-                        @if($advert->current_status)
-                        <span class="active-badge">Active</span>
-                        @else
-                        <span class="disabled-badge">Disabled</span>
-                        @endif
-                        </td>
-                        <td class="py-2 px-2 text-center">
-                        {{$advert->max_advertisers_count}}
-                        </td>
-                        <td class="py-4 px-6 text-center">
-                        {{ \Carbon\Carbon::parse($advert->updated_at)->diffForHumans() }}
-                        </td>
-                        <td class="py-4 px-6">
-                          <div class="flex">
-                             <a href="{{ route('business.edit',  $advert->id) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <!-- <a href="{{ action('\App\Http\Controllers\BusinessController@destroy', ['advert' => $advert->id]) }}" class="font-medium text-blue-600 dark:text-red-500 hover:underline"><i class="fa-solid fa-trash"></i></a> -->
-                              <button type="button" data-modal-toggle="popup-modal" class="font-medium text-blue-600 dark:text-red-500 hover:underline" title="Delete"><i class="fa-solid fa-trash"></i> </button>
-                          </div>
-                        </td>
-                      </tr>
-                      <!-- Delete confirmation modal -->
-                      <div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
-                        <div class="relative p-4 w-full max-w-md h-full md:h-auto">
-                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white" data-modal-toggle="popup-modal">
-                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                                    <span class="sr-only">Close modal</span>
-                                </button>
-                                <div class="p-6 text-center">
-                                    <svg aria-hidden="true" class="mx-auto mb-4 w-14 h-14 text-gray-400 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this advert?</h3>
-                                    <form action="{{ route('business.destroy', $advert->id) }}" method="POST">
-                                     @csrf  
-                                    @method('DELETE')                                     
-                                      <button data-modal-toggle="popup-modal" type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                                        Yes, I'm sure
-                                    </button>
-                        </form>
-                <button data-modal-toggle="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
-            </div>
-        </div>
-    </div>
-    <!-- Delete confirmation modal END -->
-</div>
-                      @endforeach
-                    </tbody>
-                  </table>
-                </div>
+                  <div class="overflow-y h-96">
+                      <table class="table-auto overflow-scroll w-full text-sm text-left text-gray-500">
+                          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                              <tr class="uppercase">
+                                  <th scope="col" class="py-3 px-6">Form ID</th>
+                                  <th scope="col" class="py-3 px-6">Submitted By</th>
+                                  <th scope="col" class="py-3 px-6">Referral Name</th>
+                                  <th scope="col" class="py-3 px-6">Company</th>
+                                  <th scope="col" class="py-3 px-6">Template</th>
+                                  <th scope="col" class="py-3 px-6">Expected Revenue</th>
+                                  <th scope="col" class="py-3 px-6 text-center">Status</th>
+                                  <th scope="col" class="py-3 px-6 text-center">Viewed</th>
+                                  <th scope="col" class="py-3 px-6 text-center">Submitted Date</th>
+                                  <th scope="col" class="py-3 px-6 text-center">Actions</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              @forelse($referralForms as $form)
+                              <tr class="border-b cursor-pointer hover:bg-gray-50 {{ !$form->viewed ? 'bg-red-50' : 'bg-white' }}" 
+                                  onclick="viewReferralForm({{ $form->id }})">
+                                  <td class="py-4 px-6 font-medium">#{{ $form->id }}</td>
+                                  <td class="py-4 px-6">{{ $form->user->first_name }} {{ $form->user->last_name }}</td>
+                                  <td class="py-4 px-6">{{ $form->referral_name }}</td>
+                                  <td class="py-4 px-6">{{ $form->company }}</td>
+                                  <td class="py-4 px-6">{{ ucwords(str_replace('_', ' ', $form->template)) }}</td>
+                                  <td class="py-4 px-6">${{ number_format($form->expected_revenue, 2) }}</td>
+                                  <td class="py-4 px-6 text-center">
+                                      @if($form->status === 'pending')
+                                          <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                              Pending
+                                          </span>
+                                      @elseif($form->status === 'accepted')
+                                          <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                              Accepted
+                                          </span>
+                                      @else
+                                          <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                              Rejected
+                                          </span>
+                                      @endif
+                                  </td>
+                                  <td class="py-4 px-6 text-center">
+                                      @if($form->viewed)
+                                          <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
+                                      @else
+                                          <span class="text-red-600"><i class="fas fa-times-circle"></i></span>
+                                      @endif
+                                  </td>
+                                  <td class="py-4 px-6 text-center">
+                                      {{ \Carbon\Carbon::parse($form->created_at)->format('M d, Y H:i') }}
+                                  </td>
+                                  <td class="py-4 px-6 text-center" onclick="event.stopPropagation()">
+                                      <button 
+                                          onclick="viewReferralForm({{ $form->id }})"
+                                          class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-3 rounded mr-1"
+                                      >
+                                          View
+                                      </button>
+                                  </td>
+                              </tr>
+                              @empty
+                              <tr>
+                                  <td colspan="10" class="py-8 text-center text-gray-500">
+                                      No referral forms submitted yet.
+                                  </td>
+                              </tr>
+                              @endforelse
+                          </tbody>
+                      </table>
+                  </div>
               </div>
+          </div>
+        </div>
+
+        <!-- Referral Form View Modal -->
+        <div id="referralViewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+            <div class="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Referral Form Details</h3>
+                        <button onclick="closeReferralViewModal()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="referralFormContent" class="space-y-4">
+                        <!-- Content will be loaded here -->
+                    </div>
+                    
+                    <div class="flex justify-between items-center mt-6 pt-4 border-t">
+                        <div class="flex space-x-3">
+                            <button 
+                                id="acceptBtn"
+                                onclick="updateReferralStatus('accept')"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                Accept
+                            </button>
+                            <button 
+                                id="rejectBtn"
+                                onclick="updateReferralStatus('reject')"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                Reject
+                            </button>
+                        </div>
+                        <button 
+                            onclick="closeReferralViewModal()"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <script>
+        let currentFormId = null;
+
+        function viewReferralForm(formId) {
+            currentFormId = formId;
+            
+            fetch(`/business/referral/${formId}/view`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const form = data.form;
+                    const content = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Form ID</label>
+                                <p class="mt-1 text-sm text-gray-900">#${form.id}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Submitted By</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.user.first_name} ${form.user.last_name}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Referral Name</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.referral_name}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Company</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.company}</p>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700">Address</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.address}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Template</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.template.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Expected Revenue</label>
+                                <p class="mt-1 text-sm text-gray-900">$${parseFloat(form.expected_revenue).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Status</label>
+                                <p class="mt-1 text-sm text-gray-900">
+                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                        form.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                        form.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                                        'bg-red-100 text-red-800'
+                                    }">
+                                        ${form.status.charAt(0).toUpperCase() + form.status.slice(1)}
+                                    </span>
+                                </p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Submitted Date</label>
+                                <p class="mt-1 text-sm text-gray-900">${new Date(form.created_at).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('referralFormContent').innerHTML = content;
+                    
+                    // Show/hide action buttons based on status
+                    const acceptBtn = document.getElementById('acceptBtn');
+                    const rejectBtn = document.getElementById('rejectBtn');
+                    
+                    if (form.status === 'pending') {
+                        acceptBtn.style.display = 'inline-block';
+                        rejectBtn.style.display = 'inline-block';
+                    } else {
+                        acceptBtn.style.display = 'none';
+                        rejectBtn.style.display = 'none';
+                    }
+                    
+                    document.getElementById('referralViewModal').classList.remove('hidden');
+                    
+                    // Update the row to remove red highlighting
+                    const row = document.querySelector(`tr[onclick*="${formId}"]`);
+                    if (row) {
+                        row.classList.remove('bg-red-50');
+                        row.classList.add('bg-white');
+                        // Update viewed icon
+                        const viewedCell = row.children[7];
+                        viewedCell.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i></span>';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error loading form details');
+            });
+        }
+
+        function updateReferralStatus(action) {
+            if (!currentFormId) return;
+            
+            fetch(`/business/referral/${currentFormId}/${action}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeReferralViewModal();
+                    location.reload(); // Refresh to show updated status
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating form status');
+            });
+        }
+
+        function closeReferralViewModal() {
+            document.getElementById('referralViewModal').classList.add('hidden');
+            currentFormId = null;
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('referralViewModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeReferralViewModal();
+            }
+        });
+        </script>
         @endsection

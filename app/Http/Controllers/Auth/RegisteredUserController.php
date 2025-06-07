@@ -56,10 +56,13 @@ class RegisteredUserController extends Controller
         if($request->account_type == 2)
         {
             $company_type_id = 1;
+            $account_type = 2;
         } else if($request->account_type == 3) {
             $company_type_id = 2;
+            $account_type = 2;
         } else {
             $company_type_id = null;
+            $account_type = 1;
         }
 
         $user = User::create([
@@ -67,7 +70,7 @@ class RegisteredUserController extends Controller
             'last_name' => $request->last_name,
             'phone' => $request->phone,
             'email' => $request->email,
-            'account_type' => $request->account_type,
+            'account_type' =>  $account_type,
             'password' => Hash::make($request->password),
             'company_type_id' => $company_type_id
         ]);

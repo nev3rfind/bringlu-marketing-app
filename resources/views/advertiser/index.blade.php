@@ -9,9 +9,7 @@
                 <div class="my-4">
                   <a role='button' href='#' class="text-white bg-orange-500 px-3 py-1 rounded-md hover:bg-purple-700">Advertiser <i class="fa-solid fa-rectangle-ad"></i></a>
                 </div>
-                  <p class="text-lg text-gray-600">Here you can view all active advertisiment campaigns published by businesses
-                    You can also view details of each campaign and requested to advetise.
-                    Requests progress can be tracked by pressing <span class="font-bold">'View My Adverts Activity' </span> button
+                  <p class="text-lg text-gray-600">Here you can submit your referral forms, see their progress and review your dashboard. <span class="font-bold">'View My Adverts Activity' </span> button
                   </p>
             </div>
           </div>

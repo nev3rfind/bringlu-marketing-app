@@ -24,13 +24,17 @@ class DatabaseSeeder extends Seeder
       // Disable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        Advert::truncate();
-        AdvertCategory::truncate();
-        AdvertMedia::truncate();
-
-        $this->call([AdvertCategorySeeder::class]);
-        $this->call([MediaTypeSeeder::class]);
-        $this->call([AdvertSeeder::class]);
+        // Seed users first
+        //$this->call([UserSeeder::class]);
+        
+        // Seed other data
+        // $this->call([AdvertCategorySeeder::class]);
+        // $this->call([MediaTypeSeeder::class]);
+        // $this->call([AdvertSeeder::class]);
+        
+        // Seed dashboard cards and values
+        $this->call([DashboardCardSeeder::class]);
+        $this->call([DashboardCardValueSeeder::class]);
 
         // Enable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

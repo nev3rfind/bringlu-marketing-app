@@ -16,12 +16,18 @@ class ReferralForm extends Model
         'address',
         'template',
         'expected_revenue',
-        'status'
+        'status',
+        'viewed'
     ];
 
     protected $dates = [
         'created_at',
         'updated_at'
+    ];
+
+    protected $casts = [
+        'viewed' => 'boolean',
+        'expected_revenue' => 'decimal:2'
     ];
 
     // A referral form belongs to a user (advertiser)

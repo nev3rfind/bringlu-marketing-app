@@ -1,31 +1,62 @@
 @extends('layouts.app')
-        @section('content')
-        <!-- Home -->
-        <section class="relative">
-            <div class="container flex flex-col-reverse lg:flex-row items-center gap-12 mt-14 lg:mt-28">
-                <!-- Content -->
-                <div class="flex flex-1 flex-col items-center lg:items-center">
-                    <h2 class="text-bringlu-blue text-3xl md:text-4 lg:text-5xl text-center lg:text-left mb-6">
-                        Bringlu
-                    </h2>
-                    <p class="text-bringlu-grey text-lg text-center lg:text-left mb-6">
-                    Foxecom referal platform
-                    </p>
-                    <div class="flex justify-center flex-wrap gap-6">
-                        <button type="button" class="btn btn-purple hover:bg-pringlu-purple hover:text-black">Advertiser</button>
-                        <button type="button" class="btn btn-white hover:bg-bringlu-purple hover:text-white">Business</button>
+@section('content')
+<!-- Landing Page -->
+<section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div class="container mx-auto px-4 text-center">
+        <!-- Main Heading -->
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-bringlu-blue mb-8">
+                Foxecom Referral Platform
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-bringlu-grey mb-12 max-w-2xl mx-auto">
+                Referral management system
+            </p>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <a href="{{ route('login') }}" class="w-full sm:w-auto">
+                    <button type="button" class="w-full sm:w-auto bg-bringlu-blue hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Login to Continue
+                    </button>
+                </a>
+                
+                <a href="{{ route('register') }}" class="w-full sm:w-auto">
+                    <button type="button" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Register Now
+                    </button>
+                </a>
+            </div>
+            
+            <!-- Additional Info -->
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-bringlu-blue text-3xl mb-4">
+                        <i class="fas fa-handshake"></i>
                     </div>
+                    <h3 class="text-xl font-semibold mb-2">Connect</h3>
+                    <p class="text-gray-600">Bridge the gap between businesses and advertisers</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-bringlu-blue text-3xl mb-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Grow</h3>
+                    <p class="text-gray-600">Expand your network and increase revenue</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-bringlu-blue text-3xl mb-4">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Manage</h3>
+                    <p class="text-gray-600">Comprehensive referral management tools</p>
                 </div>
             </div>
-        </section>
-        <!-- About -->
-        <section id="about" class="bg-bringlu-white py-28 mt-20 lg:mt-60">
-            <!-- Heading -->
-            <div class="sm:w-3/4 lg:w-5/12 mx-auto px-2">
-                <h1 class="text-3xl text-center text-bringlu-blue">About</h1>
-                <p class="text-center text-bringlu-grey mt-4">
-               Just another page
-</p>
-            </div>
-        </section>
-        @endsection
+        </div>
+    </div>
+</section>
+@endsection

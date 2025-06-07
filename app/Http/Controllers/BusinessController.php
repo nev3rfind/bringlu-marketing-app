@@ -3,310 +3,192 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
-// For IP Request
-use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Illuminate\Support\Facades\Cache;
 use Auth;
-use Carbon\Carbon;
-use App\Models\AdvertCategory;
-use App\Models\AdvertMedia;
 use App\Models\Advert;
-use App\Models\AdvertStatus;
 use App\Models\AdvertViews;
-use App\Models\User;
+use App\Models\AdvertStatus;
+use App\Mail\AdvertRequestEmail;
+use App\Mail\MailNotify;
+use App\Models\DashboardCard;
+use App\Models\DashboardCardValue;
 use App\Models\ReferralForm;
+use Illuminate\Support\Facades\Mail;
+use PDF;
 
 class BusinessController extends Controller
 {
     /**
-     * Show all adverts which belongs to that authenticated user
+     * Display an index page for Business customer showing all referral forms
      *
-     * // Displays: create advert view with data for the dropdowns
-     * // Returns: advert create view with advert categories, media types and user`s IP address
-     * @return Auth::user adverts and their count, requestsCount and campaign views
+     * @return ReferralForm model
+     * @return $referralStats array
      */
-    public function index(Request $request)
+    public function index()
     {
-        $dashboardData = $this->getBusinessDashboardData();
+        $dashboardData = $this->getDashboardData();
         return view('business.index', $dashboardData);
     }
     
-    private function getBusinessDashboardData()
+    private function getDashboardData()
     {
-        // Pending requests count
-        $requestsCount['pending'] = AdvertStatus::where('user_id', Auth::user()->id)
-        ->where('advert_status', 'pending')->count();
-        // Confirmed requests count
-        $requestsCount['confirmed'] = AdvertStatus::where('user_id', Auth::user()->id)
-        ->where('advert_status', 'confirmed')->count();
-        // Rejected requests count
-        $requestsCount['rejected'] = AdvertStatus::where('user_id', Auth::user()->id)
-        ->where('advert_status', 'rejected')->count();
-        // All requests count
-        $requestsCount['all'] = AdvertStatus::where('user_id', Auth::user()->id)->count();
-        // Total campaigns views by advetisers
-        $campaignsViews = AdvertViews::where('user_id', Auth::user()->id)->count();
+        // Get referral form statistics
+        $referralStats = [
+            'pending' => ReferralForm::where('status', 'pending')->count(),
+            'accepted' => ReferralForm::where('status', 'accepted')->count(),
+            'rejected' => ReferralForm::where('status', 'rejected')->count(),
+            'viewed' => ReferralForm::where('viewed', true)->count(),
+            'unviewed' => ReferralForm::where('viewed', false)->count(),
+            'total' => ReferralForm::count()
+        ];
+        
+        // Get all referral forms ordered by created date descending
+        $referralForms = ReferralForm::with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Get dashboard cards for this user
+        $dashboardCards = DashboardCard::where('is_active', true)
+            ->orderBy('position')
+            ->get()
+            ->map(function ($card) {
+                $activeValue = $card->getActiveValueForUser(Auth::user()->id);
+                $card->current_value = $activeValue ? $activeValue->value : 'N/A';
+                return $card;
+            });
 
         return [
-                'adverts' => Auth::user()->adverts()->get(), 
-                'advertsCount' => Auth::user()->adverts()->count(),
-                'requestsCount' => $requestsCount,
-                'campaignsViews' => $campaignsViews
+            'referralStats' => $referralStats,
+            'referralForms' => $referralForms,
+            'dashboardCards' => $dashboardCards
         ];
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Accepts request from the advertiser to advertise advert with the customer message
      *
-     * // Displays create advert view with data for the dropdowns
-     * // Returns: advert create view with advert categories, media types and user`s IP address
-     * @return \Illuminate\Http\Response
+     * @return Advertiser index page with status message
      */
-    public function create(Request $request)
+    public function request(Request $request, Advert $advert)
     {
-        return view('business.create')
-            ->with([
-                'advertCategories' => AdvertCategory::get(),
-                'mediaTypes' => AdvertMedia::get(),
-                'userIp' => $request->ip()
-            ]);
+        // Validate if message field is not empty
+        $request->validate([
+            'extra_details' => 'required',
+        ]);
+        
+        $advert_status['advertiser_id'] = Auth::user()->id;
+        $advert_status['advert_id'] = $advert->id;
+        $advert_status['user_id'] = $advert->user_id;
+        // Advert status = pending (before advert owner confirms or rejects)
+        $advert_status['advert_status'] = 'pending';
+        $advert_status['extra_details'] = $request->extra_details;
+        $advert_status['last_actioned_at'] = date('Y-m-d H:i:s');
+
+        // Prevent inserting duplicates
+        if(AdvertStatus::where('advertiser_id','=', $advert_status['advertiser_id'])
+            ->where('advert_id','=', $advert_status['advert_id'])->exists()) {
+                return redirect('/advertiser')->with('failed-requested', 'Advert already exist');
+            } else {
+                // Insert record to advertisers_ads_status table
+                AdvertStatus::create($advert_status);
+                // Send email to business customer (only can send to verified recipients within MailGun maling provider)
+                try {
+                    Mail::to('ddonatas70@gmail.com')->send(new AdvertRequestEmail);
+                } catch (\Swift_TransportException $transportExp){
+                    // ERROR sending email (do not break application)
+                }
+                 return redirect('/advertiser')->with('success-requested', 'Advert requested successfully');
+            }
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Show adverts activity tracking page
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Advers activity page with all the advert requests that belongs to the authenticated user
      */
-    //Store created advert details in the adverts table
-    // Returns: home page view with success message
-    public function store(Request $request)
+    public function activity()
     {
-        // check if checkbox was ticked or no
-      if (!$request->has('current_status'))
-     {
-         $current_status = 0;
-     }
-     else {
-         $current_status = 1;
-     }
-     $start_date = $request->start_date;
-     $end_date = $request->end_date;
-
-     $start_date = date('Y-m-d H:i:s',strtotime($start_date));
-     $end_date = date('Y-m-d H:i:s',strtotime($end_date));
-
-     $request->validate([
-        'advert_media_id' => 'required|not_in:0',
-        'advert_category_id' => 'required|not_in:0',
-        'advert_name' => 'required|max:255',
-        'industry' => 'required|max:255',
-        'start_date' => 'required',
-        'end_date' => 'required',
-        'description' => 'required',
-        'priority_level' => 'required|not_in:0',
-        'comments' => 'required',
-        'web_url' => 'required',
-        'max_advertisers_count' => 'required|numeric',
-     ]);
-
-     $data = $request->all();
-     $data['user_id'] = Auth::user()->id;
-     $data['start_date'] = $start_date;
-     $data['end_date'] = $end_date;
-     $data['current_status'] = $current_status;
-     $advert = Advert::create($data);
-
-     return redirect('/business')->with('success-created', 'Advert created successfully');
-    }
-
-    /**
-     * Display the advert details page
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // Show the selected advert details according the advert_id
-    // Returns: advert show page with that advert details returned from the database
-    public function show(Request $request, Advert $advert)
-    {
-        return view('business.show', [
-            'advert' => $advert
+        // Get all adverts requests
+        $advert_status = AdvertStatus::where('advertiser_id', Auth::user()->id)->get();
+        return view('advertiser.activity')
+        ->with([
+            'advert_status' => $advert_status
         ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show advert details page for the requested advert
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Request $request, Advert $advert
+     * @return Advert details page and instructions how page need to be displayed ($requestForm)
      */
-    // Show the edit view for the selected advert
-    // Returns: advert edit view with data for dropdowns and form prepopulation
-    public function edit(Request $request, Advert $advert)
+    public function show(Request $request, Advert $advert)
     {
-        return view('business.edit')
-            ->with([
-                'advertCategories' => AdvertCategory::get(),
-                'mediaTypes' => AdvertMedia::get(),
-                'advert' => $advert
-            ]);
-    }
-
-    /**
-     * Updates the advert details 
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // Updates the selected advert record in the database
-    // Returns: home page with success message popup
-    public function update(Request $request, $id)
-    {
-        
-        if (!$request->has('current_status'))
-     {
-         $current_status = 0;
-     }
-     else {
-         $current_status = 1;
-     }
-
-     // Get data excluding method and token property
-     $data = $request->except('_method', '_token');
-     $data['current_status'] = $current_status;
-   
-     Advert::where('id', $id)->update($data);
-        return redirect('/business')->with('success-updated', 'Advert updated successfully');
-    }
-
-    /**
-     * Remove the given advert from the database
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // Deletes selected advert
-    // Returns: home page with success message
-    public function destroy($id)
-    {
-        Advert::where('id', $id)->delete();
-        return redirect('/business')->with('success-deleted', 'Advert deleted successfully');
-    }
-
-    /**
-     * Show pending adverts
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // Shows pending ads
-    // Returns: pending ads view
-    public function showPending()
-    {
-        // Get pending adverts that belongs to authenticated business customer
-        $pendingAdverts = AdvertStatus::where('user_id', Auth::user()->id)
-            ->where('advert_status', 'pending')->get();
-
-        return view('business.pending-ads')
-            ->with([
-                'pendingAdverts' => $pendingAdverts
-            ]);
-    }
-
-    /**
-     * Confirm pending advert
-     *
-     * @param  int $userId, int $advertId
-     * @return Pendign advert views with status message
-     */
-    // Shows pending ads
-    // Returns: pending ads view
-    public function confirmPending($userId, $advertId)
-    {
-        try {
-            // Try to find and update record
-            AdvertStatus::where('advert_id', $advertId)
-            ->where('user_id', $userId)
-                ->update(array(
-                    'advert_status' => 'confirmed',
-                    'last_actioned_at' => date('Y-m-d H:i:s')
-                ));
-
-                // Succesfully updated the record
-                return redirect('/business/ads/pending')->with('advert-confirm', 'Advert confirmed successfully');
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Inform user if query failed to execute
-            return redirect('/business/ads/pending')->with('advert-update-failed', 'Advert query failed');
+        // Validate if user came from index or activity page
+        $previousUrl = url()->previous();
+        // Do not show request form and button in 'show' page
+        if (strpos($previousUrl, 'advertiser/activity') !== false) {
+            $requestForm = false;
         }
-    }
-
-    /**
-     * Reject pending advert
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // Rejects requested advert
-    // Returns: pending ads view with the status message
-    public function rejectPending($userId, $advertId)
-    {
-        try {
-            // Try to find and update record
-            AdvertStatus::where('advert_id', $advertId)
-            ->where('user_id', $userId)
-                ->update(array(
-                    'advert_status' => 'rejected',
-                    'last_actioned_at' => date('Y-m-d H:i:s')
-                ));
-
-                return redirect('/business/ads/pending')->with('advert-reject', 'Advert rejected successfully');
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Inform user if query failed to execute
-            return redirect('/business/ads/pending')->with('advert-update-failed', 'Advert query failed');
+        // Show request form and button in the 'show' page
+        else{
+            $requestForm = true;
+            $advert_view['advertiser_id'] =  Auth::user()->id;
+            $advert_view['advert_id'] = $advert->id;
+            $advert_view['user_id'] = $advert->user_id;
+            $advert_view['viewed_at'] = date('Y-m-d H:i:s');
+            // Create advertiser viewed ad record
+            AdvertViews::create($advert_view);
         }
         
+        return view('advertiser.show', [
+            'advert' => $advert,
+            'requestForm' =>$requestForm
+        ]);
     }
 
     /**
-     * Show active adverts
+     * Convert advert to PDF
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Request $request, Advert $advert
+     * @return Advert details HTML view converted to pdf and downloaded
      */
-    // Shows active ads
-    // Returns: active ads view
-    public function showActive()
+    public function convertToPdf(Request $request, Advert $advert)
     {
-        // Get active adverts that belongs to authenticated business customer
-        $activeAdverts = AdvertStatus::where('user_id', Auth::user()->id)
-            ->where('advert_status', 'confirmed')->get();
-
-        return view('business.active-ads')
-            ->with([
-                'activeAdverts' => $activeAdverts
-            ]);
+        // Load PDF view by passing model converted to array
+       $pdf = PDF::loadView('advertiser.pdf', $advert->toArray());
+        // Download returned view
+       return $pdf->download('advert_details.pdf');
     }
 
     /**
-     * Show all adverts
+     * Store a new referral form
      *
-     * @param  int  $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    // Shows all ads
-    // Returns: all ads view
-    public function showAll()
+    public function storeReferralForm(Request $request)
     {
-        // Get all adverts that belongs to authenticated business customer with all requests
-        $allAdverts = AdvertStatus::where('user_id', Auth::user()->id)->get();
+        $request->validate([
+            'referral_name' => 'required|string|max:255',
+            'company' => 'required|string|max:255',
+            'address' => 'required|string',
+            'template' => 'required|in:foxecom_commercial,foxecom_baked,foxecom_super_shopify',
+            'expected_revenue' => 'required|numeric|min:0'
+        ]);
 
-        return view('business.all-ads')
-            ->with([
-                'allAdverts' => $allAdverts
-            ]);
+        ReferralForm::create([
+            'user_id' => Auth::user()->id,
+            'referral_name' => $request->referral_name,
+            'company' => $request->company,
+            'address' => $request->address,
+            'template' => $request->template,
+            'expected_revenue' => $request->expected_revenue,
+            'status' => 'pending',
+            'viewed' => false
+        ]);
+
+        return redirect('/advertiser')->with('success-referral', 'Referral form submitted successfully');
     }
 
     /**
@@ -328,5 +210,22 @@ class BusinessController extends Controller
 
         $message = $action === 'accept' ? 'Referral form accepted successfully' : 'Referral form rejected successfully';
         return redirect()->back()->with('success', $message);
+    }
+
+    /**
+     * View referral form and mark as viewed
+     *
+     * @param ReferralForm $form
+     * @return \Illuminate\Http\Response
+     */
+    public function viewReferralForm(ReferralForm $form)
+    {
+        // Mark as viewed
+        $form->update(['viewed' => true]);
+        
+        return response()->json([
+            'success' => true,
+            'form' => $form->load('user')
+        ]);
     }
 }
