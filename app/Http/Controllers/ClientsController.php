@@ -21,7 +21,11 @@ class ClientsController extends Controller
     {
         // Get all users with account_type = 1 (advertisers)
         $clients = User::where('account_type', 1)->get();
-        
-        return view('business.clients.index', compact('clients'));
+        dd($clients);
+        //return view('business.clients.index', compact('clients'));
+        return view('business.clients.index')
+            ->with([
+                'clients' => $clients
+            ]);
     }
 }

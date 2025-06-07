@@ -14,9 +14,21 @@ use App\Models\AdvertMedia;
 use App\Models\Advert;
 use App\Models\AdvertStatus;
 use App\Models\AdvertViews;
+use App\Models\User;
 
 class BusinessController extends Controller
 {
+    public function showAllClients()
+    {
+        // Get all users with account_type = 1 (advertisers)
+        $clients = User::where('account_type', 1)->get();
+        dd($clients);
+        //return view('business.clients.index', compact('clients'));
+        return view('business.clients.index')
+            ->with([
+                'clients' => $clients
+            ]);
+    }
     /**
      * Show all adverts which belongs to that authenticated user
      *
