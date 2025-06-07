@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Auth;
 use App\Models\Advert;
 use App\Models\AdvertViews;
@@ -25,12 +26,7 @@ class AdvertiserController extends Controller
      */
     public function index()
     {
-        // Cache dashboard data for 5 minutes
-        $cacheKey = 'advertiser_dashboard_' . Auth::user()->id;
-        $dashboardData = Cache::remember($cacheKey, 300, function () {
-            return $this->getDashboardData();
-        });
-        
+        $dashboardData = $this->getDashboardData();
         return view('advertiser.index', $dashboardData);
     }
     

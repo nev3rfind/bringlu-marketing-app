@@ -21,9 +21,6 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Verify Node.js and npm installation
-RUN node --version && npm --version
-
 # Install and configure OPcache for better PHP performance
 RUN docker-php-ext-install opcache
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
@@ -45,8 +42,8 @@ RUN chown -R www-data:www-data /var/www/html \
 # Install PHP dependencies with optimizations
 RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
-# Install Node dependencies and build assets
-RUN npm ci --only=production && npm run build && npm cache clean --force
+# Install Node dependencies and build assets (simplified)
+RUN npm install && npm run build
 
 # Expose port 9000 for PHP-FPM
 EXPOSE 9000

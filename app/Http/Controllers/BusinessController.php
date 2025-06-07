@@ -17,8 +17,6 @@ use App\Models\AdvertViews;
 use App\Models\User;
 use App\Models\ReferralForm;
 
-use Illuminate\Support\Facades\Cache;
-
 class BusinessController extends Controller
 {
     /**
@@ -30,12 +28,7 @@ class BusinessController extends Controller
      */
     public function index(Request $request)
     {
-        // Cache business dashboard data for 5 minutes
-        $cacheKey = 'business_dashboard_' . Auth::user()->id;
-        $dashboardData = Cache::remember($cacheKey, 300, function () {
-            return $this->getBusinessDashboardData();
-        });
-        
+        $dashboardData = $this->getBusinessDashboardData();
         return view('business.index', $dashboardData);
     }
     
