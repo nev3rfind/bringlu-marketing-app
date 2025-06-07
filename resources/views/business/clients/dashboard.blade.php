@@ -10,22 +10,31 @@
 <x-alert />
 
 <div class="container mx-auto px-4 py-8">
-    <!-- Dashboard Cards Grid (3x2) -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Dashboard Cards Grid (3x2) with Drag and Drop -->
+    <div id="dashboard-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         @foreach($dashboardCards as $card)
-        <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+        <div class="dashboard-card bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 cursor-move" 
+             data-card-id="{{ $card->id }}" 
+             data-position="{{ $card->position }}">
             <div class="flex justify-between items-start mb-4">
                 <div>
                     <h3 class="text-xl font-bold text-gray-800">{{ $card->title }}</h3>
                     <p class="text-gray-600 text-sm">{{ $card->description }}</p>
                 </div>
-                <button 
-                    onclick="openEditModal({{ $card->id }}, '{{ $card->title }}', '{{ $card->current_value }}')"
-                    class="text-blue-500 hover:text-blue-700 transition-colors duration-200"
-                    title="Edit {{ $card->title }}"
-                >
-                    <i class="fas fa-edit text-lg"></i>
-                </button>
+                <div class="flex items-center space-x-2">
+                    <!-- Drag Handle -->
+                    <div class="drag-handle text-gray-400 hover:text-gray-600 cursor-move" title="Drag to reorder">
+                        <i class="fas fa-grip-vertical text-lg"></i>
+                    </div>
+                    <!-- Edit Button -->
+                    <button 
+                        onclick="openEditModal({{ $card->id }}, '{{ $card->title }}', '{{ $card->current_value }}')"
+                        class="edit-btn text-blue-500 hover:text-blue-700 transition-colors duration-200 hidden"
+                        title="Edit {{ $card->title }}"
+                    >
+                        <i class="fas fa-edit text-lg"></i>
+                    </button>
+                </div>
             </div>
             
             <div class="text-3xl font-bold text-bringlu-blue mb-2">
@@ -39,14 +48,22 @@
         @endforeach
     </div>
 
-    <!-- Edit Button -->
-    <div class="text-center mb-8">
+    <!-- Control Buttons -->
+    <div class="text-center mb-8 space-x-4">
         <button 
             onclick="toggleEditMode()"
             id="editModeBtn"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg"
         >
             Edit Dashboard
+        </button>
+        
+        <button 
+            onclick="toggleDragMode()"
+            id="dragModeBtn"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg"
+        >
+            Reorder Cards
         </button>
     </div>
 
@@ -140,25 +157,129 @@
     </div>
 </div>
 
+<!-- Include SortableJS from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
 <script>
 let editMode = false;
+let dragMode = false;
+let sortable = null;
 
+// Initialize drag and drop functionality
+function initializeDragAndDrop() {
+    const grid = document.getElementById('dashboard-grid');
+    
+    sortable = Sortable.create(grid, {
+        animation: 150,
+        disabled: true, // Start disabled
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        handle: '.drag-handle',
+        onEnd: function(evt) {
+            // Get new order
+            const cards = Array.from(grid.children);
+            const newOrder = cards.map((card, index) => ({
+                id: card.dataset.cardId,
+                position: index + 1
+            }));
+            
+            // Send to server
+            updateCardPositions(newOrder);
+        }
+    });
+}
+
+// Update card positions on server
+function updateCardPositions(newOrder) {
+    fetch(`/business/clients/{{ $client->id }}/dashboard/reorder`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ order: newOrder })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update position display
+            newOrder.forEach(item => {
+                const card = document.querySelector(`[data-card-id="${item.id}"]`);
+                const positionElement = card.querySelector('.text-sm.text-gray-500');
+                positionElement.textContent = `Position: ${item.position}`;
+                card.dataset.position = item.position;
+            });
+            
+            // Show success message
+            showNotification('Card positions updated successfully!', 'success');
+        } else {
+            showNotification('Failed to update positions', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error updating positions', 'error');
+    });
+}
+
+// Toggle edit mode
 function toggleEditMode() {
     editMode = !editMode;
-    const editButtons = document.querySelectorAll('[onclick^="openEditModal"]');
+    const editButtons = document.querySelectorAll('.edit-btn');
     const editModeBtn = document.getElementById('editModeBtn');
     
     if (editMode) {
-        editButtons.forEach(btn => btn.style.display = 'block');
+        editButtons.forEach(btn => btn.classList.remove('hidden'));
         editModeBtn.textContent = 'Exit Edit Mode';
         editModeBtn.className = 'bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg';
+        
+        // Disable drag mode if active
+        if (dragMode) {
+            toggleDragMode();
+        }
     } else {
-        editButtons.forEach(btn => btn.style.display = 'none');
+        editButtons.forEach(btn => btn.classList.add('hidden'));
         editModeBtn.textContent = 'Edit Dashboard';
         editModeBtn.className = 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg';
     }
 }
 
+// Toggle drag mode
+function toggleDragMode() {
+    dragMode = !dragMode;
+    const dragModeBtn = document.getElementById('dragModeBtn');
+    const cards = document.querySelectorAll('.dashboard-card');
+    
+    if (dragMode) {
+        sortable.option('disabled', false);
+        dragModeBtn.textContent = 'Exit Reorder Mode';
+        dragModeBtn.className = 'bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg';
+        
+        // Add visual feedback
+        cards.forEach(card => {
+            card.classList.add('border-2', 'border-dashed', 'border-green-300');
+        });
+        
+        // Disable edit mode if active
+        if (editMode) {
+            toggleEditMode();
+        }
+        
+        showNotification('Drag and drop mode enabled. Drag cards to reorder them.', 'info');
+    } else {
+        sortable.option('disabled', true);
+        dragModeBtn.textContent = 'Reorder Cards';
+        dragModeBtn.className = 'bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg';
+        
+        // Remove visual feedback
+        cards.forEach(card => {
+            card.classList.remove('border-2', 'border-dashed', 'border-green-300');
+        });
+    }
+}
+
+// Edit modal functions
 function openEditModal(cardId, cardTitle, currentValue) {
     if (!editMode) return;
     
@@ -172,10 +293,40 @@ function closeEditModal() {
     document.getElementById('editModal').classList.add('hidden');
 }
 
-// Initialize page with edit buttons hidden
+// Show notification
+function showNotification(message, type) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+        type === 'success' ? 'bg-green-500 text-white' :
+        type === 'error' ? 'bg-red-500 text-white' :
+        'bg-blue-500 text-white'
+    }`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    const editButtons = document.querySelectorAll('[onclick^="openEditModal"]');
-    editButtons.forEach(btn => btn.style.display = 'none');
+    // Add CSRF token to meta tag if not present
+    if (!document.querySelector('meta[name="csrf-token"]')) {
+        const meta = document.createElement('meta');
+        meta.name = 'csrf-token';
+        meta.content = '{{ csrf_token() }}';
+        document.head.appendChild(meta);
+    }
+    
+    initializeDragAndDrop();
+    
+    // Hide edit buttons initially
+    const editButtons = document.querySelectorAll('.edit-btn');
+    editButtons.forEach(btn => btn.classList.add('hidden'));
 });
 
 // Close modal when clicking outside
@@ -185,4 +336,34 @@ document.getElementById('editModal').addEventListener('click', function(e) {
     }
 });
 </script>
+
+<style>
+.sortable-ghost {
+    opacity: 0.4;
+}
+
+.sortable-chosen {
+    transform: scale(1.05);
+}
+
+.sortable-drag {
+    transform: rotate(5deg);
+}
+
+.dashboard-card {
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+}
+
+.drag-handle {
+    transition: all 0.2s ease;
+}
+
+.drag-handle:hover {
+    transform: scale(1.1);
+}
+</style>
 @endsection

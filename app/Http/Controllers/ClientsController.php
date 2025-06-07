@@ -94,6 +94,33 @@ class ClientsController extends Controller
     }
 
     /**
+     * Update dashboard card positions
+     *
+     * @param Request $request
+     * @param User $client
+     * @return \Illuminate\Http\Response
+     */
+    public function updateCardPositions(Request $request, User $client)
+    {
+        $request->validate([
+            'order' => 'required|array',
+            'order.*.id' => 'required|exists:dashboard_cards,id',
+            'order.*.position' => 'required|integer|min:1|max:6'
+        ]);
+
+        try {
+            foreach ($request->order as $item) {
+                DashboardCard::where('id', $item['id'])
+                    ->update(['position' => $item['position']]);
+            }
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Show forms for a specific client
      *
      * @param User $client

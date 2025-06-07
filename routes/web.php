@@ -39,6 +39,7 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
     Route::get('/business/clients', [ClientsController::class, 'showAll'])->name('clients.all');
     Route::get('/business/clients/{client}/dashboard', [ClientsController::class, 'dashboard'])->name('clients.dashboard');
     Route::put('/business/clients/{client}/dashboard/card/{card}', [ClientsController::class, 'updateCardValue'])->name('clients.dashboard.update');
+    Route::post('/business/clients/{client}/dashboard/reorder', [ClientsController::class, 'updateCardPositions'])->name('clients.dashboard.reorder');
     Route::get('/business/clients/{client}/forms', [ClientsController::class, 'forms'])->name('clients.forms');
 });
 
