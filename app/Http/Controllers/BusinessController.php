@@ -15,20 +15,10 @@ use App\Models\Advert;
 use App\Models\AdvertStatus;
 use App\Models\AdvertViews;
 use App\Models\User;
+use App\Models\ReferralForm;
 
 class BusinessController extends Controller
 {
-    public function showAllClients()
-    {
-        // Get all users with account_type = 1 (advertisers)
-        $clients = User::where('account_type', 1)->get();
-        dd($clients);
-        //return view('business.clients.index', compact('clients'));
-        return view('business.clients.index')
-            ->with([
-                'clients' => $clients
-            ]);
-    }
     /**
      * Show all adverts which belongs to that authenticated user
      *
@@ -314,4 +304,24 @@ class BusinessController extends Controller
             ]);
     }
 
+    /**
+     * Update referral form status
+     *
+     * @param Request $request
+     * @param ReferralForm $form
+     * @param string $action
+     * @return \Illuminate\Http\Response
+     */
+    public function updateReferralStatus(Request $request, ReferralForm $form, $action)
+    {
+        if (!in_array($action, ['accept', 'reject'])) {
+            abort(404);
+        }
+
+        $status = $action === 'accept' ? 'accepted' : 'rejected';
+        $form->update(['status' => $status]);
+
+        $message = $action === 'accept' ? 'Referral form accepted successfully' : 'Referral form rejected successfully';
+        return redirect()->back()->with('success', $message);
+    }
 }

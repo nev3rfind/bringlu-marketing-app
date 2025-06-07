@@ -9,6 +9,9 @@ use App\Models\AdvertViews;
 use App\Models\AdvertStatus;
 use App\Mail\AdvertRequestEmail;
 use App\Mail\MailNotify;
+use App\Models\DashboardCard;
+use App\Models\DashboardCardValue;
+use App\Models\ReferralForm;
 use Illuminate\Support\Facades\Mail;
 use PDF;
 
@@ -33,10 +36,28 @@ class AdvertiserController extends Controller
         ->where('advert_status', 'rejected')->count();
         // Total requests count
         $requestsCount['all'] = AdvertStatus::where('advertiser_id', Auth::user()->id)->count();
+        
+        // Get dashboard cards for this user
+        $dashboardCards = DashboardCard::where('is_active', true)
+            ->orderBy('position')
+            ->get()
+            ->map(function ($card) {
+                $activeValue = $card->getActiveValueForUser(Auth::user()->id);
+                $card->current_value = $activeValue ? $activeValue->value : 'N/A';
+                return $card;
+            });
+        
+        // Get referral forms for this user
+        $referralForms = ReferralForm::where('user_id', Auth::user()->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('advertiser.index')
         ->with([
             'adverts' => Advert::get(), 
-            'requestsCount' => $requestsCount
+            'requestsCount' => $requestsCount,
+            'dashboardCards' => $dashboardCards,
+            'referralForms' => $referralForms
         ]);
     }
 
@@ -135,5 +156,34 @@ class AdvertiserController extends Controller
        $pdf = PDF::loadView('advertiser.pdf', $advert->toArray());
         // Download returned view
        return $pdf->download('advert_details.pdf');
+    }
+
+    /**
+     * Store a new referral form
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeReferralForm(Request $request)
+    {
+        $request->validate([
+            'referral_name' => 'required|string|max:255',
+            'company' => 'required|string|max:255',
+            'address' => 'required|string',
+            'template' => 'required|in:foxecom_commercial,foxecom_baked,foxecom_super_shopify',
+            'expected_revenue' => 'required|numeric|min:0'
+        ]);
+
+        ReferralForm::create([
+            'user_id' => Auth::user()->id,
+            'referral_name' => $request->referral_name,
+            'company' => $request->company,
+            'address' => $request->address,
+            'template' => $request->template,
+            'expected_revenue' => $request->expected_revenue,
+            'status' => 'pending'
+        ]);
+
+        return redirect('/advertiser')->with('success-referral', 'Referral form submitted successfully');
     }
 }

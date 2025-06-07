@@ -9,9 +9,7 @@
                 <div class="my-4">
                   <a role='button' href='#' class="text-white bg-green-500 px-3 py-1 rounded-md hover:bg-purple-700">Business customer <i class="fa-solid fa-briefcase"></i></a>
                 </div>
-                  <p class="text-lg text-gray-600">Here you see all your advert campaigns activity, create new adverts, edit current ones.
-                    Also, newly implemented features allows business customers to see pending adverts requests. These requests made by advertisers can be confirmed or rejected in the
-                    "Check pending adverts section". 
+                  <p class="text-lg text-gray-600">Dashbord
                   </p>
             </div>
           </div>
@@ -70,7 +68,7 @@
               <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
                 <div class="overflow-y h-72">
                   <table class="table-auto overflow-scroll w-full text-sm text-left text-gray-500">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                       <tr class="uppercase">
                         <th scope="col" class="py-3 px-6">
                             Advert Title

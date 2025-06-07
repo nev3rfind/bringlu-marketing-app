@@ -2,11 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BusinessController;
-use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AdvertiserController;
 use App\Http\Controllers\SocialController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\ClientsController;
 use Illuminate\Http\Request;
 
 /*
@@ -36,14 +35,16 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
     Route::get('/business/ads/active', 'App\Http\Controllers\BusinessController@showActive')->name('adverts.active');
     Route::get('/business/ads/all', 'App\Http\Controllers\BusinessController@showAll')->name('adverts.all');
     
-<<<<<<< HEAD
-    Route::get('/business/clients', [BusinessController::class, 'showAllClients'])->name('clients.all');
-=======
     // Fixed clients routes
-    Route::get('/business/clients', [ClientsController::class, 'showAll'])->name('clients.all');
-    Route::get('/business/clients/{client}/dashboard', [ClientsController::class, 'dashboard'])->name('clients.dashboard');
-    Route::get('/business/clients/{client}/forms', [ClientsController::class, 'forms'])->name('clients.forms');
->>>>>>> a016fb152f2a6e296c1d7d19b34753e834ecddad
+    Route::get('/business/clients/all', 'App\Http\Controllers\ClientController@showAll')->name('clients.all');
+    Route::get('/business/clients/{client}/dashboard', 'App\Http\Controllers\ClientController@dashboard')->name('clients.dashboard');
+     Route::put('/business/clients/{client}/dashboard/card/{card}', [ClientController::class, 'updateCardValue'])->name('clients.dashboard.update');
+     Route::post('/business/clients/{client}/dashboard/reorder', [ClientController::class, 'updateCardPositions'])->name('clients.dashboard.reorder');
+    Route::get('/business/clients/{client}/forms', 'App\Http\Controllers\ClientController@forms')->name('clients.forms');
+    Route::get('/business/clients/{client}/forms', [ClientController::class, 'forms'])->name('clients.forms');
+
+// Referral form management routes
+    Route::put('/business/referral/{form}/{action}', 'App\Http\Controllers\BusinessController@updateReferralStatus')->name('business.referral.update');
 });
 
 // Advertiser customer routes
@@ -59,6 +60,8 @@ Route::prefix('/advertiser')->middleware('auth', 'authorise-adv')->group(functio
     ->middleware(['throttle:advertRequests'])->name('advert.request');
     // Advert details conversion to PDF route
     Route::get('convert/{advert}', 'App\Http\Controllers\AdvertiserController@convertToPdf')->name('advert.topdf');
+
+     Route::post('/referral/store', 'App\Http\Controllers\AdvertiserController@storeReferralForm')->name('advertiser.referral.store');
 });
 
 // GitHub Authentication Routes

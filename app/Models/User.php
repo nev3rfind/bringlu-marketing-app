@@ -27,6 +27,7 @@ class User extends Authenticatable
         'password',
         'account_type',
         'created_date',
+        'company_type_id'
     ];
 
     /**
