@@ -16,6 +16,12 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+<<<<<<< HEAD
+=======
+        // Clear existing users
+        User::truncate();
+
+>>>>>>> 5f6d59fae498ee0f5d648c7d8c135b5d68846f59
         // Create the admin user (Le Thu Trang)
         User::create([
             'first_name' => 'Le Thu',

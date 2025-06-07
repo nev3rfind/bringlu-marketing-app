@@ -10,7 +10,11 @@
             </h1>
             
             <p class="text-xl md:text-2xl text-bringlu-grey mb-12 max-w-2xl mx-auto">
+<<<<<<< HEAD
                 Referral management system
+=======
+                Connect businesses with advertisers through our comprehensive referral management system
+>>>>>>> 5f6d59fae498ee0f5d648c7d8c135b5d68846f59
             </p>
             
             <!-- Action Buttons -->
