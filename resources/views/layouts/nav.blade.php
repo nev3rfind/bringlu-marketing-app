@@ -10,7 +10,7 @@
                     
                     {{-- Only show Manage Clients for business customers (account_type = 2) --}}
                     @if(auth()->user()->account_type === 2)
-                        <a href="{{ route('clients.all') }}"><button type="button" class="bg-orange-500 text-white rounded-md px-7 py-3 uppercase">Manage clients</button></a>
+                        <a href="{{ route('clients.all') }}"><button type="button" class="bg-orange-500 text-white rounded-md px-7 py-3 uppercase">Manage Clients</button></a>
                     @endif
                     
                     <form method="POST" action="{{ route('logout') }}">
