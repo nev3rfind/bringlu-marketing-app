@@ -59,6 +59,9 @@ Route::prefix('/advertiser')->middleware('auth', 'authorise-adv')->group(functio
     ->middleware(['throttle:advertRequests'])->name('advert.request');
     // Advert details conversion to PDF route
     Route::get('convert/{advert}', 'App\Http\Controllers\AdvertiserController@convertToPdf')->name('advert.topdf');
+    
+    // Referral form submission route
+    Route::post('/referral/store', 'App\Http\Controllers\AdvertiserController@storeReferralForm')->name('advertiser.referral.store');
 });
 
 // GitHub Authentication Routes
