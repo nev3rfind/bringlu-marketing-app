@@ -21,6 +21,9 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Verify Node.js and npm installation
+RUN node --version && npm --version
+
 # Install and configure OPcache for better PHP performance
 RUN docker-php-ext-install opcache
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
