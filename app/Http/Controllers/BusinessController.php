@@ -17,6 +17,8 @@ use App\Models\AdvertViews;
 use App\Models\User;
 use App\Models\ReferralForm;
 
+use Illuminate\Support\Facades\Cache;
+
 class BusinessController extends Controller
 {
     /**
@@ -27,6 +29,17 @@ class BusinessController extends Controller
      * @return Auth::user adverts and their count, requestsCount and campaign views
      */
     public function index(Request $request)
+    {
+        // Cache business dashboard data for 5 minutes
+        $cacheKey = 'business_dashboard_' . Auth::user()->id;
+        $dashboardData = Cache::remember($cacheKey, 300, function () {
+            return $this->getBusinessDashboardData();
+        });
+        
+        return view('business.index', $dashboardData);
+    }
+    
+    private function getBusinessDashboardData()
     {
         // Pending requests count
         $requestsCount['pending'] = AdvertStatus::where('user_id', Auth::user()->id)
@@ -42,13 +55,12 @@ class BusinessController extends Controller
         // Total campaigns views by advetisers
         $campaignsViews = AdvertViews::where('user_id', Auth::user()->id)->count();
 
-        return view('business.index')
-            ->with([
+        return [
                 'adverts' => Auth::user()->adverts()->get(), 
                 'advertsCount' => Auth::user()->adverts()->count(),
                 'requestsCount' => $requestsCount,
                 'campaignsViews' => $campaignsViews
-            ]);
+        ];
     }
 
     /**

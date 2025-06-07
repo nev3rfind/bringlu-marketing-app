@@ -25,6 +25,17 @@ class AdvertiserController extends Controller
      */
     public function index()
     {
+        // Cache dashboard data for 5 minutes
+        $cacheKey = 'advertiser_dashboard_' . Auth::user()->id;
+        $dashboardData = Cache::remember($cacheKey, 300, function () {
+            return $this->getDashboardData();
+        });
+        
+        return view('advertiser.index', $dashboardData);
+    }
+    
+    private function getDashboardData()
+    {
         // Pending requests count
         $requestsCount['pending'] = AdvertStatus::where('advertiser_id', Auth::user()->id)
         ->where('advert_status', 'pending')->count();
@@ -52,13 +63,12 @@ class AdvertiserController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('advertiser.index')
-        ->with([
+        return [
             'adverts' => Advert::get(), 
             'requestsCount' => $requestsCount,
             'dashboardCards' => $dashboardCards,
             'referralForms' => $referralForms
-        ]);
+        ];
     }
 
     /**
