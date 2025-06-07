@@ -15,6 +15,7 @@ use App\Models\Advert;
 use App\Models\AdvertStatus;
 use App\Models\AdvertViews;
 use App\Models\User;
+use App\Models\ReferralForm;
 
 class BusinessController extends Controller
 {
@@ -303,4 +304,24 @@ class BusinessController extends Controller
             ]);
     }
 
+    /**
+     * Update referral form status
+     *
+     * @param Request $request
+     * @param ReferralForm $form
+     * @param string $action
+     * @return \Illuminate\Http\Response
+     */
+    public function updateReferralStatus(Request $request, ReferralForm $form, $action)
+    {
+        if (!in_array($action, ['accept', 'reject'])) {
+            abort(404);
+        }
+
+        $status = $action === 'accept' ? 'accepted' : 'rejected';
+        $form->update(['status' => $status]);
+
+        $message = $action === 'accept' ? 'Referral form accepted successfully' : 'Referral form rejected successfully';
+        return redirect()->back()->with('success', $message);
+    }
 }
