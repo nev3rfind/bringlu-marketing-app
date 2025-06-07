@@ -19,11 +19,10 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained();
             $table->foreignIdFor(DashboardCard::class)->constrained();
-            $table->string('value'); // The current value for this card
-            $table->timestamps();
-            
-            // Ensure one value per user per card
-            $table->unique(['user_id', 'dashboard_card_id']);
+            $table->string('value'); // The value for this card
+            $table->boolean('is_active')->default(true); // Current active value
+            $table->timestamp('created_at'); // When this value was created
+            $table->timestamp('updated_at')->nullable();
         });
     }
 

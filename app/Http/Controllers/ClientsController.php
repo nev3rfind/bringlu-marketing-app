@@ -7,7 +7,6 @@ use Auth;
 use App\Models\User;
 use App\Models\DashboardCard;
 use App\Models\DashboardCardValue;
-use App\Models\DashboardCardHistory;
 
 class ClientsController extends Controller
 {
@@ -37,17 +36,24 @@ class ClientsController extends Controller
             abort(404);
         }
 
-        // Get all dashboard cards with their values for this client
+        // Get all dashboard cards with their active values for this client
         $dashboardCards = DashboardCard::where('is_active', true)
             ->orderBy('position')
             ->get()
             ->map(function ($card) use ($client) {
-                $value = $card->getValueForUser($client->id);
-                $card->current_value = $value ? $value->value : 'N/A';
+                $activeValue = $card->getActiveValueForUser($client->id);
+                $card->current_value = $activeValue ? $activeValue->value : 'N/A';
                 return $card;
             });
 
-        return view('business.clients.dashboard', compact('client', 'dashboardCards'));
+        // Get history for all cards for this client (inactive values)
+        $history = DashboardCardValue::where('user_id', $client->id)
+            ->where('is_active', false)
+            ->with('dashboardCard')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('business.clients.dashboard', compact('client', 'dashboardCards', 'history'));
     }
 
     /**
@@ -64,32 +70,23 @@ class ClientsController extends Controller
             'value' => 'required|string|max:255'
         ]);
 
-        // Get current value
+        // Get current active value
         $currentValue = DashboardCardValue::where('user_id', $client->id)
             ->where('dashboard_card_id', $card->id)
+            ->where('is_active', true)
             ->first();
 
-        $oldValue = $currentValue ? $currentValue->value : null;
-        $newValue = $request->value;
+        if ($currentValue) {
+            // Deactivate current value (move to history)
+            $currentValue->update(['is_active' => false]);
+        }
 
-        // Update or create the value
-        DashboardCardValue::updateOrCreate(
-            [
-                'user_id' => $client->id,
-                'dashboard_card_id' => $card->id
-            ],
-            [
-                'value' => $newValue
-            ]
-        );
-
-        // Create history record
-        DashboardCardHistory::create([
+        // Create new active value
+        DashboardCardValue::create([
             'user_id' => $client->id,
             'dashboard_card_id' => $card->id,
-            'old_value' => $oldValue,
-            'new_value' => $newValue,
-            'changed_at' => now()
+            'value' => $request->value,
+            'is_active' => true
         ]);
 
         return redirect()->route('clients.dashboard', $client)

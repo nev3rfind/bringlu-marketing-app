@@ -12,7 +12,13 @@ class DashboardCardValue extends Model
     protected $fillable = [
         'user_id',
         'dashboard_card_id',
-        'value'
+        'value',
+        'is_active'
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at'
     ];
 
     // A dashboard card value belongs to a user

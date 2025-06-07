@@ -23,7 +23,7 @@ class DashboardCardValueSeeder extends Seeder
 
         foreach ($advertisers as $advertiser) {
             foreach ($cards as $card) {
-                // Create default values for each card
+                // Create default active values for each card
                 $defaultValues = [
                     'Earnings' => '$0.00',
                     'Profit' => '$0.00',
@@ -36,7 +36,8 @@ class DashboardCardValueSeeder extends Seeder
                 DashboardCardValue::create([
                     'user_id' => $advertiser->id,
                     'dashboard_card_id' => $card->id,
-                    'value' => $defaultValues[$card->title] ?? 'N/A'
+                    'value' => $defaultValues[$card->title] ?? 'N/A',
+                    'is_active' => true
                 ]);
             }
         }
