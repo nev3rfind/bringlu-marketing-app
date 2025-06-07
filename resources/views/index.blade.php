@@ -6,7 +6,7 @@
                 <!-- Content -->
                 <div class="flex flex-1 flex-col items-center lg:items-center">
                     <h2 class="text-bringlu-blue text-3xl md:text-4 lg:text-5xl text-center lg:text-left mb-6">
-                        Bringlu
+                        FoxeCom
                     </h2>
                     <p class="text-bringlu-grey text-lg text-center lg:text-left mb-6">
                     Foxecom referal platform

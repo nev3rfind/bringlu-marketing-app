@@ -2,13 +2,15 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: bringlu-app
     restart: unless-stopped
     working_dir: /var/www/html
     volumes:
-      - .:/var/www/html
-      - ./storage:/var/www/html/storage
+      - .:/var/www/html:cached  # Use cached mount for better performance
+      - ./storage:/var/www/html/storage:delegated  # Use delegated for write-heavy directories
       - node_modules:/var/www/html/node_modules
     ports:
       - "5173:5173"
@@ -16,6 +18,19 @@ services:
       - bringlu-network
     depends_on:
       - db
+      - redis
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_DATABASE=bringlu_db
+      - DB_USERNAME=bringlu_user
+      - DB_PASSWORD=bringlu_password
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
 
   webserver:
     image: nginx:alpine
@@ -24,7 +39,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - .:/var/www/html
+      - .:/var/www/html:cached
       - ./docker/nginx:/etc/nginx/conf.d
     networks:
       - bringlu-network
@@ -46,6 +61,17 @@ services:
       - dbdata:/var/lib/mysql
     networks:
       - bringlu-network
+    command: --default-authentication-plugin=mysql_native_password --innodb-buffer-pool-size=256M --innodb-log-file-size=64M
+
+  redis:
+    image: redis:7-alpine
+    container_name: bringlu-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - bringlu-network
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin

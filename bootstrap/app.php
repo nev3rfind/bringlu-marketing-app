@@ -15,6 +15,11 @@ $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
+// Enable configuration caching in production
+if (file_exists($cached = __DIR__.'/cache/config.php')) {
+    $app->loadConfigurationFrom($cached);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces
