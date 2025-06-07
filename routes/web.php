@@ -43,8 +43,9 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
     Route::get('/business/clients/{client}/forms', 'App\Http\Controllers\ClientController@forms')->name('clients.forms');
     Route::get('/business/clients/{client}/forms', [ClientController::class, 'forms'])->name('clients.forms');
 
-// Referral form management routes
+    // Referral form management routes
     Route::put('/business/referral/{form}/{action}', 'App\Http\Controllers\BusinessController@updateReferralStatus')->name('business.referral.update');
+    Route::post('/business/referral/{form}/view', 'App\Http\Controllers\BusinessController@viewReferralForm')->name('business.referral.view');
 });
 
 // Advertiser customer routes
