@@ -40,9 +40,9 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Install PHP dependencies with optimizations
-RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
+RUN composer install --optimize-autoloader --no-scripts --no-interaction
 
-# Install Node dependencies and build assets (simplified)
+# Install Node dependencies and build assets
 RUN npm install && npm run build
 
 # Expose port 9000 for PHP-FPM

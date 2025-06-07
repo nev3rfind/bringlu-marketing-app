@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build: 
@@ -9,8 +7,8 @@ services:
     restart: unless-stopped
     working_dir: /var/www/html
     volumes:
-      - .:/var/www/html:cached  # Use cached mount for better performance
-      - ./storage:/var/www/html/storage:delegated  # Use delegated for write-heavy directories
+      - .:/var/www/html:cached
+      - ./storage:/var/www/html/storage:delegated
       - node_modules:/var/www/html/node_modules
     ports:
       - "5173:5173"
@@ -61,7 +59,7 @@ services:
       - dbdata:/var/lib/mysql
     networks:
       - bringlu-network
-    command: --default-authentication-plugin=mysql_native_password --innodb-buffer-pool-size=256M --innodb-log-file-size=64M
+    command: --default-authentication-plugin=mysql_native_password --innodb-buffer-pool-size=512M --innodb-log-file-size=128M --max_connections=200
 
   redis:
     image: redis:7-alpine
@@ -71,7 +69,9 @@ services:
       - "6379:6379"
     networks:
       - bringlu-network
-    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -97,4 +97,6 @@ volumes:
   dbdata:
     driver: local
   node_modules:
+    driver: local
+  redis_data:
     driver: local
