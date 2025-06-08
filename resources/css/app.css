@@ -63,12 +63,43 @@
     @apply bg-white border-slate-600 border border-red-400 text-red-400 rounded-md px-4 py-2 hover:bg-red-400 hover:text-red-600;
 }
 
+/* FoxEcom Professional Card Design */
 .foxecom-card {
-    @apply bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
+    @apply bg-white rounded-xl border border-gray-100 transition-all duration-300 transform hover:-translate-y-1;
+    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.foxecom-card:hover {
+    box-shadow: 0 8px 30px rgba(255, 107, 53, 0.15), 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.foxecom-card-premium {
+    @apply bg-gradient-to-br from-white to-orange-50 rounded-xl border border-orange-100 transition-all duration-300 transform hover:-translate-y-1;
+    box-shadow: 0 6px 25px rgba(255, 107, 53, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.foxecom-card-premium:hover {
+    box-shadow: 0 12px 40px rgba(255, 107, 53, 0.2), 0 6px 8px rgba(0, 0, 0, 0.12);
 }
 
 .unviewed-row {
     @apply bg-red-50 hover:bg-red-100;
+}
+
+/* Table Styles */
+.foxecom-table-container {
+    @apply w-full overflow-hidden rounded-lg shadow-md border border-gray-200;
+    max-height: 400px;
+}
+
+.foxecom-table {
+    @apply w-full text-sm text-left text-gray-500;
+    min-width: 100%;
+}
+
+.foxecom-table-body {
+    @apply overflow-y-auto;
+    max-height: 350px;
 }
 
 /* FoxEcom specific styles */
@@ -98,4 +129,56 @@
 
 .shadow-foxecom-lg {
     box-shadow: 0 10px 25px 0 rgba(255, 107, 53, 0.2);
+}
+
+/* Success Notification */
+.success-notification {
+    @apply fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300;
+}
+
+.success-notification.show {
+    @apply translate-x-0 opacity-100;
+}
+
+.success-notification.hide {
+    @apply translate-x-full opacity-0;
+}
+
+/* Error Notification */
+.error-notification {
+    @apply fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300;
+}
+
+.error-notification.show {
+    @apply translate-x-0 opacity-100;
+}
+
+.error-notification.hide {
+    @apply translate-x-full opacity-0;
+}
+
+/* Modal Improvements */
+.foxecom-modal {
+    @apply fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50;
+}
+
+.foxecom-modal-content {
+    @apply relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 border w-full max-w-lg shadow-xl rounded-xl bg-white;
+}
+
+/* Button Styles */
+.foxecom-btn-primary {
+    @apply bg-foxecom-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-foxecom;
+}
+
+.foxecom-btn-secondary {
+    @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300;
+}
+
+.foxecom-btn-success {
+    @apply bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-foxecom;
+}
+
+.foxecom-btn-danger {
+    @apply bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-foxecom;
 }

@@ -1,20 +1,21 @@
 @extends('layouts.app')
         @section('content')
         <x-alert />
-        <div class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 mt-16">
+        <div class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 mt-16 gap-6">
           <!-- Greeting Card -->
-          <div class="col-span-8 p-2 foxecom-card">
+          <div class="col-span-8 p-6 foxecom-card-premium">
             <div class="p-2">
                 <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">Hello {{ auth()->user()->first_name }} {{ auth()->user()->last_name }},</h2>
                 <div class="my-4">
-                  <a role='button' href='#' class="text-white bg-foxecom-orange px-3 py-1 rounded-md hover:bg-orange-600">Advertiser <i class="fa-solid fa-rectangle-ad"></i></a>
+                  <a role='button' href='#' class="text-white bg-foxecom-orange px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300 shadow-foxecom">
+                    Advertiser <i class="fa-solid fa-rectangle-ad ml-2"></i>
+                  </a>
                 </div>
-                  <p class="text-lg text-foxecom-gray">Here you can submit your referral forms, see their progress and review your dashboard.
-                  </p>
+                <p class="text-lg text-foxecom-gray">Here you can submit your referral forms, see their progress and review your dashboard.</p>
             </div>
           </div>
          <!-- Referral Activity card -->
-         <div class="col-span-4 p-2 foxecom-card">
+         <div class="col-span-4 p-6 foxecom-card">
             <div class="p-2">
             <h2 class="font-bold text-3xl mb-2 text-center text-foxecom-dark">My Referrals</h2>
               <p class="text-lg text-foxecom-gray">Pending forms: <span class="font-bold text-yellow-600">{{ $referralStats['pending'] }}</span></p>
@@ -25,13 +26,13 @@
           </div>
           
           <!-- Dashboard Cards Section -->
-          <div class="col-span-12 p-4 foxecom-card">
+          <div class="col-span-12 p-6 foxecom-card">
               <div class="p-2">
-                  <h2 class="font-bold text-3xl mb-2 text-center text-foxecom-dark">My Dashboard</h2>
+                  <h2 class="font-bold text-3xl mb-4 text-center text-foxecom-dark">My Dashboard</h2>
               </div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                   @foreach($dashboardCards as $card)
-                  <div class="foxecom-card p-4">
+                  <div class="foxecom-card p-6">
                       <div class="flex justify-between items-start mb-2">
                           <div>
                               <h3 class="text-lg font-bold text-foxecom-dark">{{ $card->title }}</h3>
@@ -47,20 +48,20 @@
           </div>
 
           <!-- Referral Forms Section -->
-          <div class="col-span-12 p-4 foxecom-card">
+          <div class="col-span-12 p-6 foxecom-card">
               <div class="p-2 flex justify-between items-center">
                   <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">My Referral Forms</h2>
                   <button 
                       onclick="openReferralModal()"
-                      class="bg-foxecom-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-foxecom"
+                      class="foxecom-btn-primary"
                   >
                       Submit Referral Form
                   </button>
               </div>
-              <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
-                  <div class="overflow-y h-72">
-                      <table class="table-auto overflow-scroll w-full text-sm text-left text-gray-500">
-                          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+              <div class="foxecom-table-container">
+                  <div class="foxecom-table-body">
+                      <table class="foxecom-table">
+                          <thead class="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
                               <tr class="uppercase">
                                   <th scope="col" class="py-3 px-6">Form ID</th>
                                   <th scope="col" class="py-3 px-6">Referral Name</th>
@@ -74,7 +75,7 @@
                           </thead>
                           <tbody>
                               @forelse($referralForms as $form)
-                              <tr class="bg-white border-b">
+                              <tr class="bg-white border-b hover:bg-gray-50">
                                   <td class="py-4 px-6">#{{ $form->id }}</td>
                                   <td class="py-4 px-6">{{ $form->referral_name }}</td>
                                   <td class="py-4 px-6">{{ $form->company }}</td>
@@ -117,128 +118,124 @@
           </div>
 
         <!-- Referral Form Modal -->
-        <div id="referralModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-            <div class="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <h3 class="text-lg font-medium text-foxecom-dark text-center mb-4">Submit Referral Form</h3>
-                    <form id="referralForm" method="POST" action="{{ route('advertiser.referral.store') }}">
-                        @csrf
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label for="referral_name" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                    Referral Name *
-                                </label>
-                                <input 
-                                    type="text" 
-                                    id="referral_name" 
-                                    name="referral_name" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
-                                    required
-                                >
-                            </div>
-                            <div>
-                                <label for="company" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                    Company *
-                                </label>
-                                <input 
-                                    type="text" 
-                                    id="company" 
-                                    name="company" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
-                                    required
-                                >
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="address" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                Address *
+        <div id="referralModal" class="foxecom-modal hidden">
+            <div class="foxecom-modal-content">
+                <h3 class="text-lg font-medium text-foxecom-dark text-center mb-4">Submit Referral Form</h3>
+                <form id="referralForm" method="POST" action="{{ route('advertiser.referral.store') }}">
+                    @csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="referral_name" class="block text-sm font-medium text-foxecom-dark mb-2">
+                                Referral Name *
                             </label>
-                            <textarea 
-                                id="address" 
-                                name="address" 
-                                rows="3"
+                            <input 
+                                type="text" 
+                                id="referral_name" 
+                                name="referral_name" 
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
                                 required
-                            ></textarea>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label for="template" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                    Template *
-                                </label>
-                                <select 
-                                    id="template" 
-                                    name="template" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
-                                    required
-                                >
-                                    <option value="">Select Template</option>
-                                    <option value="foxecom_commercial">Foxecom Commercial Template</option>
-                                    <option value="foxecom_baked">Foxecom Baked</option>
-                                    <option value="foxecom_super_shopify">Foxecom Super Shopify</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="expected_revenue" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                    Expected Revenue ($) *
-                                </label>
-                                <input 
-                                    type="number" 
-                                    id="expected_revenue" 
-                                    name="expected_revenue" 
-                                    step="0.01"
-                                    min="0"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
-                                    required
-                                >
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-end space-x-3 mt-6">
-                            <button 
-                                type="button" 
-                                onclick="closeReferralModal()"
-                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
                             >
-                                Cancel
-                            </button>
-                            <button 
-                                type="submit"
-                                class="bg-foxecom-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded shadow-foxecom"
-                            >
-                                Submit Referral
-                            </button>
                         </div>
-                    </form>
-                </div>
+                        <div>
+                            <label for="company" class="block text-sm font-medium text-foxecom-dark mb-2">
+                                Company *
+                            </label>
+                            <input 
+                                type="text" 
+                                id="company" 
+                                name="company" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="address" class="block text-sm font-medium text-foxecom-dark mb-2">
+                            Address *
+                        </label>
+                        <textarea 
+                            id="address" 
+                            name="address" 
+                            rows="3"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
+                            required
+                        ></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="template" class="block text-sm font-medium text-foxecom-dark mb-2">
+                                Template *
+                            </label>
+                            <select 
+                                id="template" 
+                                name="template" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
+                                required
+                            >
+                                <option value="">Select Template</option>
+                                <option value="foxecom_commercial">Foxecom Commercial Template</option>
+                                <option value="foxecom_baked">Foxecom Baked</option>
+                                <option value="foxecom_super_shopify">Foxecom Super Shopify</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="expected_revenue" class="block text-sm font-medium text-foxecom-dark mb-2">
+                                Expected Revenue ($) *
+                            </label>
+                            <input 
+                                type="number" 
+                                id="expected_revenue" 
+                                name="expected_revenue" 
+                                step="0.01"
+                                min="0"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button 
+                            type="button" 
+                            onclick="closeReferralModal()"
+                            class="foxecom-btn-secondary"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            type="submit"
+                            class="foxecom-btn-primary"
+                        >
+                            Submit Referral
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
 
         <!-- Advertiser Referral View Modal -->
-        <div id="advertiserReferralViewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-            <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-medium text-foxecom-dark">Referral Form Details</h3>
-                        <button onclick="closeAdvertiserReferralViewModal()" class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
-                    </div>
-                    
-                    <div id="advertiserReferralFormContent" class="space-y-4">
-                        <!-- Content will be loaded here -->
-                    </div>
-                    
-                    <div class="flex justify-end mt-6 pt-4 border-t">
-                        <button 
-                            onclick="closeAdvertiserReferralViewModal()"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-                        >
-                            Close
-                        </button>
-                    </div>
+        <div id="advertiserReferralViewModal" class="foxecom-modal hidden">
+            <div class="foxecom-modal-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-foxecom-dark">Referral Form Details</h3>
+                    <button onclick="closeAdvertiserReferralViewModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div id="advertiserReferralFormContent" class="space-y-4 mb-6">
+                    <!-- Content will be loaded here -->
+                </div>
+                
+                <div class="flex justify-end pt-4 border-t">
+                    <button 
+                        onclick="closeAdvertiserReferralViewModal()"
+                        class="foxecom-btn-secondary"
+                    >
+                        Close
+                    </button>
                 </div>
             </div>
         </div>

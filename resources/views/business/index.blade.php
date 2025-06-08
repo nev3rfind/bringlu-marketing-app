@@ -3,14 +3,15 @@
         <x-alert />
         <div class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 mt-16 gap-6">
           <!-- Greeting Card -->
-          <div class="col-span-8 p-6 foxecom-card">
+          <div class="col-span-8 p-6 foxecom-card-premium">
             <div class="p-2">
                 <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">Hello {{ auth()->user()->first_name }} {{ auth()->user()->last_name }},</h2>
                 <div class="my-4">
-                  <a role='button' href='#' class="text-white bg-green-500 px-3 py-1 rounded-md hover:bg-green-600">Business customer <i class="fa-solid fa-briefcase"></i></a>
+                  <a role='button' href='#' class="text-white bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300 shadow-foxecom">
+                    Business customer <i class="fa-solid fa-briefcase ml-2"></i>
+                  </a>
                 </div>
-                  <p class="text-lg text-foxecom-gray">Manage referral forms and track submissions from your clients
-                  </p>
+                <p class="text-lg text-foxecom-gray">Manage referral forms and track submissions from your clients</p>
             </div>
           </div>
          <!-- Activity card -->
@@ -29,12 +30,12 @@
           <!-- Referral Forms Table -->
           <div class="col-span-12 p-6 foxecom-card">
               <div class="p-2">
-                  <h2 class="font-bold text-3xl mb-2 text-center text-foxecom-dark">All Referral Forms</h2>
+                  <h2 class="font-bold text-3xl mb-4 text-center text-foxecom-dark">All Referral Forms</h2>
               </div>
-              <div class="w-full overflow-hidden rounded-lg shadow-md">
-                  <div class="w-full overflow-x-auto">
-                      <table class="w-full text-sm text-left text-gray-500">
-                          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+              <div class="foxecom-table-container">
+                  <div class="foxecom-table-body">
+                      <table class="foxecom-table">
+                          <thead class="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
                               <tr class="uppercase">
                                   <th scope="col" class="py-3 px-6">Form ID</th>
                                   <th scope="col" class="py-3 px-6">Submitted By</th>
@@ -60,17 +61,11 @@
                                   <td class="py-4 px-6">${{ number_format($form->expected_revenue, 2) }}</td>
                                   <td class="py-4 px-6 text-center">
                                       @if($form->status === 'pending')
-                                          <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                              Pending
-                                          </span>
+                                          <span class="pending-badge">Pending</span>
                                       @elseif($form->status === 'accepted')
-                                          <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                              Accepted
-                                          </span>
+                                          <span class="active-badge">Accepted</span>
                                       @else
-                                          <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                                              Rejected
-                                          </span>
+                                          <span class="disabled-badge">Rejected</span>
                                       @endif
                                   </td>
                                   <td class="py-4 px-6 text-center">
@@ -107,50 +102,78 @@
         </div>
 
         <!-- Referral Form View Modal -->
-        <div id="referralViewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-            <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-medium text-foxecom-dark">Referral Form Details</h3>
-                        <button onclick="closeReferralViewModal()" class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
-                    </div>
-                    
-                    <div id="referralFormContent" class="space-y-4">
-                        <!-- Content will be loaded here -->
-                    </div>
-                    
-                    <div class="flex justify-between items-center mt-6 pt-4 border-t">
-                        <div class="flex space-x-3">
-                            <button 
-                                id="acceptBtn"
-                                onclick="updateReferralStatus('accept')"
-                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-foxecom"
-                            >
-                                Accept
-                            </button>
-                            <button 
-                                id="rejectBtn"
-                                onclick="updateReferralStatus('reject')"
-                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow-foxecom"
-                            >
-                                Reject
-                            </button>
-                        </div>
-                        <button 
-                            onclick="closeReferralViewModal()"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-                        >
-                            Close
-                        </button>
-                    </div>
+        <div id="referralViewModal" class="foxecom-modal hidden">
+            <div class="foxecom-modal-content">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-foxecom-dark">Referral Form Details</h3>
+                    <button onclick="closeReferralViewModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
+                
+                <div id="referralFormContent" class="space-y-4 mb-6">
+                    <!-- Content will be loaded here -->
+                </div>
+                
+                <div class="flex justify-between items-center pt-4 border-t">
+                    <div class="flex space-x-3">
+                        <button 
+                            id="acceptBtn"
+                            onclick="updateReferralStatus('accept')"
+                            class="foxecom-btn-success"
+                        >
+                            Accept
+                        </button>
+                        <button 
+                            id="rejectBtn"
+                            onclick="updateReferralStatus('reject')"
+                            class="foxecom-btn-danger"
+                        >
+                            Reject
+                        </button>
+                    </div>
+                    <button 
+                        onclick="closeReferralViewModal()"
+                        class="foxecom-btn-secondary"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Notification -->
+        <div id="successNotification" class="success-notification hide">
+            <div class="flex items-center">
+                <i class="fas fa-check-circle mr-2"></i>
+                <span id="successMessage">Success!</span>
+            </div>
+        </div>
+
+        <!-- Error Notification -->
+        <div id="errorNotification" class="error-notification hide">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span id="errorMessage">Error!</span>
             </div>
         </div>
 
         <script>
         let currentFormId = null;
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById(type + 'Notification');
+            const messageElement = document.getElementById(type + 'Message');
+            
+            messageElement.textContent = message;
+            notification.classList.remove('hide');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                notification.classList.add('hide');
+            }, 4000);
+        }
 
         function viewReferralForm(formId) {
             currentFormId = formId;
@@ -250,7 +273,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error loading form details');
+                showNotification('Error loading form details', 'error');
             });
         }
 
@@ -267,8 +290,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Show success message
-                    alert(data.message);
+                    // Show success notification
+                    showNotification(data.message, 'success');
                     
                     // Update the status in the modal
                     const statusElement = document.querySelector('#referralFormContent .inline-flex');
@@ -288,21 +311,17 @@
                     const row = document.querySelector(`tr[onclick*="${currentFormId}"]`);
                     if (row) {
                         const statusCell = row.children[6];
-                        statusCell.innerHTML = `
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                data.status === 'accepted' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                            }">
-                                ${data.status.charAt(0).toUpperCase() + data.status.slice(1)}
-                            </span>
-                        `;
+                        const statusClass = data.status === 'accepted' ? 'active-badge' : 'disabled-badge';
+                        const statusText = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+                        statusCell.innerHTML = `<span class="${statusClass}">${statusText}</span>`;
                     }
                 } else {
-                    alert('Error updating form status: ' + (data.error || 'Unknown error'));
+                    showNotification('Error updating form status: ' + (data.error || 'Unknown error'), 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error updating form status');
+                showNotification('Error updating form status', 'error');
             });
         }
 
