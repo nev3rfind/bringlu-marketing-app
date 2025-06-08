@@ -43,16 +43,20 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
     Route::get('/business/ads/active', 'App\Http\Controllers\BusinessController@showActive')->name('adverts.active');
     Route::get('/business/ads/all', 'App\Http\Controllers\BusinessController@showAll')->name('adverts.all');
     
-    // Fixed clients routes
+    // Client management routes
     Route::get('/business/clients/all', 'App\Http\Controllers\ClientController@showAll')->name('clients.all');
     Route::get('/business/clients/{client}/dashboard', 'App\Http\Controllers\ClientController@dashboard')->name('clients.dashboard');
     Route::put('/business/clients/{client}/dashboard/card/{card}', [ClientController::class, 'updateCardValue'])->name('clients.dashboard.update');
     Route::post('/business/clients/{client}/dashboard/reorder', [ClientController::class, 'updateCardPositions'])->name('clients.dashboard.reorder');
-    Route::get('/business/clients/{client}/forms', 'App\Http\Controllers\ClientController@forms')->name('clients.forms');
+    Route::get('/business/clients/{client}/forms', [ClientController::class, 'forms'])->name('clients.forms');
 
-    // Referral form management routes
+    // Referral form management routes (main business dashboard)
     Route::put('/business/referral/{form}/{action}', 'App\Http\Controllers\BusinessController@updateReferralStatus')->name('business.referral.update');
     Route::post('/business/referral/{form}/view', 'App\Http\Controllers\BusinessController@viewReferralForm')->name('business.referral.view');
+    
+    // Referral form management routes (client forms page)
+    Route::put('/business/clients/referral/{form}/{action}', [ClientController::class, 'updateReferralStatus'])->name('clients.referral.update');
+    Route::post('/business/clients/referral/{form}/view', [ClientController::class, 'viewReferralForm'])->name('clients.referral.view');
 });
 
 // Advertiser customer routes

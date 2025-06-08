@@ -7,6 +7,7 @@ use Auth;
 use App\Models\User;
 use App\Models\DashboardCard;
 use App\Models\DashboardCardValue;
+use App\Models\ReferralForm;
 
 class ClientController extends Controller
 {
@@ -134,5 +135,52 @@ class ClientController extends Controller
         }
 
         return view('business.clients.forms', compact('client'));
+    }
+
+    /**
+     * Update referral form status (from client forms page)
+     *
+     * @param Request $request
+     * @param ReferralForm $form
+     * @param string $action
+     * @return \Illuminate\Http\Response
+     */
+    public function updateReferralStatus(Request $request, ReferralForm $form, $action)
+    {
+        if (!in_array($action, ['accept', 'reject'])) {
+            return response()->json(['success' => false, 'error' => 'Invalid action'], 400);
+        }
+
+        try {
+            $status = $action === 'accept' ? 'accepted' : 'rejected';
+            $form->update(['status' => $status]);
+
+            $message = $action === 'accept' ? 'Referral form accepted successfully' : 'Referral form rejected successfully';
+            
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'status' => $status
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'Failed to update status'], 500);
+        }
+    }
+
+    /**
+     * View referral form and mark as viewed (from client forms page)
+     *
+     * @param ReferralForm $form
+     * @return \Illuminate\Http\Response
+     */
+    public function viewReferralForm(ReferralForm $form)
+    {
+        // Mark as viewed
+        $form->update(['viewed' => true]);
+        
+        return response()->json([
+            'success' => true,
+            'form' => $form->load('user')
+        ]);
     }
 }

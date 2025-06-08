@@ -1,10 +1,10 @@
 @extends('layouts.app')
 @section('content')
 <div class="mt-8 text-center">
-    <h1 class="font-medium leading-tight text-4xl mt-0 mb-2 text-bringlu-blue">
+    <h1 class="font-medium leading-tight text-4xl mt-0 mb-2 text-foxecom-dark">
         Referral Forms for {{ $client->first_name }} {{ $client->last_name }}
     </h1>
-    <p class="text-gray-600">Review and manage client referral form submissions</p>
+    <p class="text-foxecom-gray">Review and manage client referral form submissions</p>
 </div>
 
 <x-alert />
@@ -16,116 +16,64 @@
             ->get();
     @endphp
 
-    <div class="bg-white rounded-lg shadow-lg p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Submitted Referral Forms</h2>
+    <div class="foxecom-card p-6">
+        <h2 class="text-2xl font-bold text-foxecom-dark mb-4">Submitted Referral Forms</h2>
         
         @if($referralForms->count() > 0)
-        <div class="overflow-x-auto">
-            <table class="min-w-full table-auto">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Form ID
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Referral Name
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Company
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Template
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Expected Revenue
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Submitted
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Viewed
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($referralForms as $form)
-                    <tr class="{{ !$form->viewed ? 'bg-red-50' : '' }}">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            #{{ $form->id }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $form->referral_name }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $form->company }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ ucwords(str_replace('_', ' ', $form->template)) }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            ${{ number_format($form->expected_revenue, 2) }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ \Carbon\Carbon::parse($form->created_at)->format('M d, Y H:i') }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            @if($form->status === 'pending')
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                    Pending
-                                </span>
-                            @elseif($form->status === 'accepted')
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                    Accepted
-                                </span>
-                            @else
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                                    Rejected
-                                </span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                            @if($form->viewed)
-                                <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
-                            @else
-                                <span class="text-red-600"><i class="fas fa-times-circle"></i></span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex space-x-2">
+        <div class="foxecom-table-container">
+            <div class="foxecom-table-body">
+                <table class="foxecom-table">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
+                        <tr>
+                            <th class="px-6 py-3 text-left">Form ID</th>
+                            <th class="px-6 py-3 text-left">Referral Name</th>
+                            <th class="px-6 py-3 text-left">Company</th>
+                            <th class="px-6 py-3 text-left">Template</th>
+                            <th class="px-6 py-3 text-left">Expected Revenue</th>
+                            <th class="px-6 py-3 text-left">Submitted</th>
+                            <th class="px-6 py-3 text-left">Status</th>
+                            <th class="px-6 py-3 text-left">Viewed</th>
+                            <th class="px-6 py-3 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($referralForms as $form)
+                        <tr class="{{ !$form->viewed ? 'unviewed-row' : 'bg-white' }} border-b hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium">#{{ $form->id }}</td>
+                            <td class="px-6 py-4">{{ $form->referral_name }}</td>
+                            <td class="px-6 py-4">{{ $form->company }}</td>
+                            <td class="px-6 py-4">{{ ucwords(str_replace('_', ' ', $form->template)) }}</td>
+                            <td class="px-6 py-4">${{ number_format($form->expected_revenue, 2) }}</td>
+                            <td class="px-6 py-4">{{ \Carbon\Carbon::parse($form->created_at)->format('M d, Y H:i') }}</td>
+                            <td class="px-6 py-4">
+                                @if($form->status === 'pending')
+                                    <span class="pending-badge">Pending</span>
+                                @elseif($form->status === 'accepted')
+                                    <span class="active-badge">Accepted</span>
+                                @else
+                                    <span class="disabled-badge">Rejected</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                @if($form->viewed)
+                                    <span class="text-green-600"><i class="fas fa-check-circle"></i></span>
+                                @else
+                                    <span class="text-red-600"><i class="fas fa-times-circle"></i></span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
                                 <button 
-                                    onclick="viewReferralForm({{ $form->id }})"
-                                    class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-3 rounded"
+                                    onclick="viewClientReferralForm({{ $form->id }})"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-3 rounded mr-1"
                                 >
                                     View
                                 </button>
-                                @if($form->status === 'pending')
-                                    <form method="POST" action="{{ route('business.referral.update', ['form' => $form->id, 'action' => 'accept']) }}" class="inline">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white text-xs font-bold py-1 px-3 rounded">
-                                            Accept
-                                        </button>
-                                    </form>
-                                    <form method="POST" action="{{ route('business.referral.update', ['form' => $form->id, 'action' => 'reject']) }}" class="inline">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white text-xs font-bold py-1 px-3 rounded">
-                                            Reject
-                                        </button>
-                                    </form>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
         @else
         <p class="text-gray-500 text-center py-8">No referral forms submitted yet.</p>
@@ -134,42 +82,90 @@
 
     <!-- Back Button -->
     <div class="mt-8 text-center">
-        <a href="{{ route('clients.all') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+        <a href="{{ route('clients.all') }}" class="foxecom-btn-secondary">
             Back to Clients
         </a>
     </div>
 </div>
 
 <!-- Referral Form View Modal -->
-<div id="referralViewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-    <div class="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
-        <div class="mt-3">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium text-gray-900">Referral Form Details</h3>
-                <button onclick="closeReferralViewModal()" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <div id="referralFormContent" class="space-y-4">
-                <!-- Content will be loaded here -->
-            </div>
-            
-            <div class="flex justify-end mt-6 pt-4 border-t">
+<div id="clientReferralViewModal" class="foxecom-modal hidden">
+    <div class="foxecom-modal-content">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium text-foxecom-dark">Referral Form Details</h3>
+            <button onclick="closeClientReferralViewModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <div id="clientReferralFormContent" class="space-y-4 mb-6">
+            <!-- Content will be loaded here -->
+        </div>
+        
+        <div class="flex justify-between items-center pt-4 border-t">
+            <div class="flex space-x-3">
                 <button 
-                    onclick="closeReferralViewModal()"
-                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                    id="clientAcceptBtn"
+                    onclick="updateClientReferralStatus('accept')"
+                    class="foxecom-btn-success"
                 >
-                    Close
+                    Accept
+                </button>
+                <button 
+                    id="clientRejectBtn"
+                    onclick="updateClientReferralStatus('reject')"
+                    class="foxecom-btn-danger"
+                >
+                    Reject
                 </button>
             </div>
+            <button 
+                onclick="closeClientReferralViewModal()"
+                class="foxecom-btn-secondary"
+            >
+                Close
+            </button>
         </div>
     </div>
 </div>
 
+<!-- Success Notification -->
+<div id="successNotification" class="success-notification hide">
+    <div class="flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="successMessage">Success!</span>
+    </div>
+</div>
+
+<!-- Error Notification -->
+<div id="errorNotification" class="error-notification hide">
+    <div class="flex items-center">
+        <i class="fas fa-exclamation-circle mr-2"></i>
+        <span id="errorMessage">Error!</span>
+    </div>
+</div>
+
 <script>
-function viewReferralForm(formId) {
-    fetch(`/business/referral/${formId}/view`, {
+let currentClientFormId = null;
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById(type + 'Notification');
+    const messageElement = document.getElementById(type + 'Message');
+    
+    messageElement.textContent = message;
+    notification.classList.remove('hide');
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+        notification.classList.add('hide');
+    }, 4000);
+}
+
+function viewClientReferralForm(formId) {
+    currentClientFormId = formId;
+    
+    fetch(`/business/clients/referral/${formId}/view`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -183,35 +179,35 @@ function viewReferralForm(formId) {
             const content = `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Form ID</label>
+                        <label class="block text-sm font-medium text-foxecom-dark">Form ID</label>
                         <p class="mt-1 text-sm text-gray-900">#${form.id}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Submitted By</label>
+                        <label class="block text-sm font-medium text-foxecom-dark">Submitted By</label>
                         <p class="mt-1 text-sm text-gray-900">${form.user.first_name} ${form.user.last_name}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Referral Name</label>
+                        <label class="block text-sm font-medium text-foxecom-dark">Referral Name</label>
                         <p class="mt-1 text-sm text-gray-900">${form.referral_name}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Company</label>
+                        <label class="block text-sm font-medium text-foxecom-dark">Company</label>
                         <p class="mt-1 text-sm text-gray-900">${form.company}</p>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700">Address</label>
+                        <label class="block text-sm font-medium text-foxecom-dark">Address</label>
                         <p class="mt-1 text-sm text-gray-900">${form.address}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Template</label>
+                        <label class="block text-sm font-medium text-foxecom-dark">Template</label>
                         <p class="mt-1 text-sm text-gray-900">${form.template.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Expected Revenue</label>
+                        <label class="block text-sm font-medium text-foxecom-dark">Expected Revenue</label>
                         <p class="mt-1 text-sm text-gray-900">$${parseFloat(form.expected_revenue).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Status</label>
+                        <label class="block text-sm font-medium text-foxecom-dark">Status</label>
                         <p class="mt-1 text-sm text-gray-900">
                             <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                                 form.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
@@ -223,7 +219,7 @@ function viewReferralForm(formId) {
                         </p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Submitted Date</label>
+                        <label class="block text-sm font-medium text-foxecom-dark">Submitted Date</label>
                         <p class="mt-1 text-sm text-gray-900">${new Date(form.created_at).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'short',
@@ -235,14 +231,28 @@ function viewReferralForm(formId) {
                 </div>
             `;
             
-            document.getElementById('referralFormContent').innerHTML = content;
-            document.getElementById('referralViewModal').classList.remove('hidden');
+            document.getElementById('clientReferralFormContent').innerHTML = content;
+            
+            // Show/hide action buttons based on status
+            const acceptBtn = document.getElementById('clientAcceptBtn');
+            const rejectBtn = document.getElementById('clientRejectBtn');
+            
+            if (form.status === 'pending') {
+                acceptBtn.style.display = 'inline-block';
+                rejectBtn.style.display = 'inline-block';
+            } else {
+                acceptBtn.style.display = 'none';
+                rejectBtn.style.display = 'none';
+            }
+            
+            document.getElementById('clientReferralViewModal').classList.remove('hidden');
             
             // Update the row to remove red highlighting
             const rows = document.querySelectorAll('tr');
             rows.forEach(row => {
                 if (row.innerHTML.includes(`#${formId}`)) {
-                    row.classList.remove('bg-red-50');
+                    row.classList.remove('unviewed-row');
+                    row.classList.add('bg-white');
                     // Update viewed icon
                     const viewedCell = row.children[7];
                     viewedCell.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i></span>';
@@ -252,18 +262,69 @@ function viewReferralForm(formId) {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error loading form details');
+        showNotification('Error loading form details', 'error');
     });
 }
 
-function closeReferralViewModal() {
-    document.getElementById('referralViewModal').classList.add('hidden');
+function updateClientReferralStatus(action) {
+    if (!currentClientFormId) return;
+    
+    fetch(`/business/clients/referral/${currentClientFormId}/${action}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success notification
+            showNotification(data.message, 'success');
+            
+            // Update the status in the modal
+            const statusElement = document.querySelector('#clientReferralFormContent .inline-flex');
+            if (statusElement) {
+                const newStatus = data.status;
+                statusElement.className = `inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                    newStatus === 'accepted' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                }`;
+                statusElement.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+            }
+            
+            // Hide action buttons
+            document.getElementById('clientAcceptBtn').style.display = 'none';
+            document.getElementById('clientRejectBtn').style.display = 'none';
+            
+            // Update the table row
+            const rows = document.querySelectorAll('tr');
+            rows.forEach(row => {
+                if (row.innerHTML.includes(`#${currentClientFormId}`)) {
+                    const statusCell = row.children[6];
+                    const statusClass = data.status === 'accepted' ? 'active-badge' : 'disabled-badge';
+                    const statusText = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+                    statusCell.innerHTML = `<span class="${statusClass}">${statusText}</span>`;
+                }
+            });
+        } else {
+            showNotification('Error updating form status: ' + (data.error || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error updating form status', 'error');
+    });
+}
+
+function closeClientReferralViewModal() {
+    document.getElementById('clientReferralViewModal').classList.add('hidden');
+    currentClientFormId = null;
 }
 
 // Close modal when clicking outside
-document.getElementById('referralViewModal').addEventListener('click', function(e) {
+document.getElementById('clientReferralViewModal').addEventListener('click', function(e) {
     if (e.target === this) {
-        closeReferralViewModal();
+        closeClientReferralViewModal();
     }
 });
 </script>
