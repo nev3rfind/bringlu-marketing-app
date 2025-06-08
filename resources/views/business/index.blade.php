@@ -3,33 +3,33 @@
         <x-alert />
         <div class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 mt-16">
           <!-- Greeting Card -->
-          <div class="col-span-8 p-2 bg-grey rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl">
+          <div class="col-span-8 p-2 foxecom-card">
             <div class="p-2">
-                <h2 class="font-bold text-3xl mb-2 ">Hello {{ auth()->user()->first_name }} {{ auth()->user()->last_name }},</h2>
+                <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">Hello {{ auth()->user()->first_name }} {{ auth()->user()->last_name }},</h2>
                 <div class="my-4">
-                  <a role='button' href='#' class="text-white bg-green-500 px-3 py-1 rounded-md hover:bg-purple-700">Business customer <i class="fa-solid fa-briefcase"></i></a>
+                  <a role='button' href='#' class="text-white bg-green-500 px-3 py-1 rounded-md hover:bg-green-600">Business customer <i class="fa-solid fa-briefcase"></i></a>
                 </div>
-                  <p class="text-lg text-gray-600">Manage referral forms and track submissions from your clients
+                  <p class="text-lg text-foxecom-gray">Manage referral forms and track submissions from your clients
                   </p>
             </div>
           </div>
          <!-- Activity card -->
-         <div class="col-span-4 p-2 bg-grey rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl">
+         <div class="col-span-4 p-2 foxecom-card">
             <div class="p-2">
-            <h2 class="font-bold text-3xl mb-2 text-center">Referral Statistics</h2>
-              <p class="text-lg text-gray-600">Pending forms: <span class="font-bold text-yellow-600">{{ $referralStats['pending'] }}</span></p>
-              <p class="text-lg text-gray-600">Accepted forms: <span class="font-bold text-green-600">{{ $referralStats['accepted'] }}</span></p>
-              <p class="text-lg text-gray-600">Rejected forms: <span class="font-bold text-red-600">{{ $referralStats['rejected'] }}</span></p>
-              <p class="text-lg text-gray-600">Viewed forms: <span class="font-bold text-blue-600">{{ $referralStats['viewed'] }}</span></p>
-              <p class="text-lg text-gray-600">Unviewed forms: <span class="font-bold text-red-500">{{ $referralStats['unviewed'] }}</span></p>
-              <p class="text-lg text-gray-600"><span class="font-bold">Total</span> forms: <span class="font-bold">{{ $referralStats['total'] }}</span></p>
+            <h2 class="font-bold text-3xl mb-2 text-center text-foxecom-dark">Referral Statistics</h2>
+              <p class="text-lg text-foxecom-gray">Pending forms: <span class="font-bold text-yellow-600">{{ $referralStats['pending'] }}</span></p>
+              <p class="text-lg text-foxecom-gray">Accepted forms: <span class="font-bold text-green-600">{{ $referralStats['accepted'] }}</span></p>
+              <p class="text-lg text-foxecom-gray">Rejected forms: <span class="font-bold text-red-600">{{ $referralStats['rejected'] }}</span></p>
+              <p class="text-lg text-foxecom-gray">Viewed forms: <span class="font-bold text-blue-600">{{ $referralStats['viewed'] }}</span></p>
+              <p class="text-lg text-foxecom-gray">Unviewed forms: <span class="font-bold text-red-500">{{ $referralStats['unviewed'] }}</span></p>
+              <p class="text-lg text-foxecom-gray"><span class="font-bold">Total</span> forms: <span class="font-bold">{{ $referralStats['total'] }}</span></p>
             </div>
           </div>
 
           <!-- Referral Forms Table -->
-          <div class="col-span-12 p-4 bg-grey rounded-xl shadow-lg">
+          <div class="col-span-12 p-4 foxecom-card">
               <div class="p-2">
-                  <h2 class="font-bold text-3xl mb-2 text-center">All Referral Forms</h2>
+                  <h2 class="font-bold text-3xl mb-2 text-center text-foxecom-dark">All Referral Forms</h2>
               </div>
               <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
                   <div class="overflow-y h-96">
@@ -50,7 +50,7 @@
                           </thead>
                           <tbody>
                               @forelse($referralForms as $form)
-                              <tr class="border-b cursor-pointer hover:bg-gray-50 {{ !$form->viewed ? 'bg-red-50' : 'bg-white' }}" 
+                              <tr class="border-b cursor-pointer hover:bg-gray-50 {{ !$form->viewed ? 'unviewed-row' : 'bg-white' }}" 
                                   onclick="viewReferralForm({{ $form->id }})">
                                   <td class="py-4 px-6 font-medium">#{{ $form->id }}</td>
                                   <td class="py-4 px-6">{{ $form->user->first_name }} {{ $form->user->last_name }}</td>
@@ -108,10 +108,10 @@
 
         <!-- Referral Form View Modal -->
         <div id="referralViewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-            <div class="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
+            <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
                 <div class="mt-3">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-medium text-gray-900">Referral Form Details</h3>
+                        <h3 class="text-lg font-medium text-foxecom-dark">Referral Form Details</h3>
                         <button onclick="closeReferralViewModal()" class="text-gray-400 hover:text-gray-600">
                             <i class="fas fa-times text-xl"></i>
                         </button>
@@ -169,35 +169,35 @@
                     const content = `
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Form ID</label>
+                                <label class="block text-sm font-medium text-foxecom-dark">Form ID</label>
                                 <p class="mt-1 text-sm text-gray-900">#${form.id}</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Submitted By</label>
+                                <label class="block text-sm font-medium text-foxecom-dark">Submitted By</label>
                                 <p class="mt-1 text-sm text-gray-900">${form.user.first_name} ${form.user.last_name}</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Referral Name</label>
+                                <label class="block text-sm font-medium text-foxecom-dark">Referral Name</label>
                                 <p class="mt-1 text-sm text-gray-900">${form.referral_name}</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Company</label>
+                                <label class="block text-sm font-medium text-foxecom-dark">Company</label>
                                 <p class="mt-1 text-sm text-gray-900">${form.company}</p>
                             </div>
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700">Address</label>
+                                <label class="block text-sm font-medium text-foxecom-dark">Address</label>
                                 <p class="mt-1 text-sm text-gray-900">${form.address}</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Template</label>
+                                <label class="block text-sm font-medium text-foxecom-dark">Template</label>
                                 <p class="mt-1 text-sm text-gray-900">${form.template.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Expected Revenue</label>
+                                <label class="block text-sm font-medium text-foxecom-dark">Expected Revenue</label>
                                 <p class="mt-1 text-sm text-gray-900">$${parseFloat(form.expected_revenue).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Status</label>
+                                <label class="block text-sm font-medium text-foxecom-dark">Status</label>
                                 <p class="mt-1 text-sm text-gray-900">
                                     <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                                         form.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
@@ -209,7 +209,7 @@
                                 </p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Submitted Date</label>
+                                <label class="block text-sm font-medium text-foxecom-dark">Submitted Date</label>
                                 <p class="mt-1 text-sm text-gray-900">${new Date(form.created_at).toLocaleDateString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
@@ -240,7 +240,7 @@
                     // Update the row to remove red highlighting
                     const row = document.querySelector(`tr[onclick*="${formId}"]`);
                     if (row) {
-                        row.classList.remove('bg-red-50');
+                        row.classList.remove('unviewed-row');
                         row.classList.add('bg-white');
                         // Update viewed icon
                         const viewedCell = row.children[7];

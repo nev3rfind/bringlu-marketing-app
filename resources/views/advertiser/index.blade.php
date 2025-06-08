@@ -3,42 +3,42 @@
         <x-alert />
         <div class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 mt-16">
           <!-- Greeting Card -->
-          <div class="col-span-8 p-2 bg-grey rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl">
+          <div class="col-span-8 p-2 foxecom-card">
             <div class="p-2">
-                <h2 class="font-bold text-3xl mb-2 ">Hello {{ auth()->user()->first_name }} {{ auth()->user()->last_name }},</h2>
+                <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">Hello {{ auth()->user()->first_name }} {{ auth()->user()->last_name }},</h2>
                 <div class="my-4">
-                  <a role='button' href='#' class="text-white bg-orange-500 px-3 py-1 rounded-md hover:bg-purple-700">Advertiser <i class="fa-solid fa-rectangle-ad"></i></a>
+                  <a role='button' href='#' class="text-white bg-foxecom-orange px-3 py-1 rounded-md hover:bg-orange-600">Advertiser <i class="fa-solid fa-rectangle-ad"></i></a>
                 </div>
-                  <p class="text-lg text-gray-600">Here you can submit your referral forms, see their progress and review your dashboard. <span class="font-bold">'View My Adverts Activity' </span> button
+                  <p class="text-lg text-foxecom-gray">Here you can submit your referral forms, see their progress and review your dashboard.
                   </p>
             </div>
           </div>
-         <!-- Activity card -->
-         <div class="col-span-4 p-2 bg-grey rounded-xl transform transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-2xl">
+         <!-- Referral Activity card -->
+         <div class="col-span-4 p-2 foxecom-card">
             <div class="p-2">
-            <h2 class="font-bold text-3xl mb-2 text-center">My activity</h2>
-              <p class="text-lg text-gray-600">Currently advertising: <span class="font-bold">{{ $requestsCount['confirmed'] }}</span> adverts</p>
-              <p class="text-lg text-gray-600">Rejected requests: <span class="font-bold">{{ $requestsCount['rejected'] }}</span></p>
-              <p class="text-lg text-gray-600">Pending requests:  <span class="font-bold">{{ $requestsCount['pending'] }}</span></p>
-              <p class="text-lg text-gray-600"><span class="font-bold">Total</span> requests:  <span class="font-bold">{{ $requestsCount['all'] }}</span></p>
+            <h2 class="font-bold text-3xl mb-2 text-center text-foxecom-dark">My Referrals</h2>
+              <p class="text-lg text-foxecom-gray">Pending forms: <span class="font-bold text-yellow-600">{{ $referralStats['pending'] }}</span></p>
+              <p class="text-lg text-foxecom-gray">Accepted forms: <span class="font-bold text-green-600">{{ $referralStats['accepted'] }}</span></p>
+              <p class="text-lg text-foxecom-gray">Rejected forms: <span class="font-bold text-red-600">{{ $referralStats['rejected'] }}</span></p>
+              <p class="text-lg text-foxecom-gray"><span class="font-bold">Total</span> forms: <span class="font-bold">{{ $referralStats['total'] }}</span></p>
             </div>
           </div>
           
           <!-- Dashboard Cards Section -->
-          <div class="col-span-12 p-4 bg-grey rounded-xl shadow-lg">
+          <div class="col-span-12 p-4 foxecom-card">
               <div class="p-2">
-                  <h2 class="font-bold text-3xl mb-2 text-center">My Dashboard</h2>
+                  <h2 class="font-bold text-3xl mb-2 text-center text-foxecom-dark">My Dashboard</h2>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                   @foreach($dashboardCards as $card)
-                  <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300">
+                  <div class="foxecom-card p-4">
                       <div class="flex justify-between items-start mb-2">
                           <div>
-                              <h3 class="text-lg font-bold text-gray-800">{{ $card->title }}</h3>
-                              <p class="text-gray-600 text-sm">{{ $card->description }}</p>
+                              <h3 class="text-lg font-bold text-foxecom-dark">{{ $card->title }}</h3>
+                              <p class="text-foxecom-gray text-sm">{{ $card->description }}</p>
                           </div>
                       </div>
-                      <div class="text-2xl font-bold text-bringlu-blue mb-2">
+                      <div class="text-2xl font-bold text-foxecom-orange mb-2">
                           {{ $card->current_value }}
                       </div>
                   </div>
@@ -47,12 +47,12 @@
           </div>
 
           <!-- Referral Forms Section -->
-          <div class="col-span-12 p-4 bg-grey rounded-xl shadow-lg">
+          <div class="col-span-12 p-4 foxecom-card">
               <div class="p-2 flex justify-between items-center">
-                  <h2 class="font-bold text-3xl mb-2">My Referral Forms</h2>
+                  <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">My Referral Forms</h2>
                   <button 
                       onclick="openReferralModal()"
-                      class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                      class="bg-foxecom-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-foxecom"
                   >
                       Submit Referral Form
                   </button>
@@ -69,6 +69,7 @@
                                   <th scope="col" class="py-3 px-6">Expected Revenue</th>
                                   <th scope="col" class="py-3 px-6 text-center">Submission Date</th>
                                   <th scope="col" class="py-3 px-6 text-center">Status</th>
+                                  <th scope="col" class="py-3 px-6 text-center">Actions</th>
                               </tr>
                           </thead>
                           <tbody>
@@ -86,17 +87,25 @@
                                   </td>
                                   <td class="py-4 px-6 text-center">
                                       @if($form->status === 'pending')
-                                          <span class="medium-priority">{{ $form->status }}</span>
+                                          <span class="pending-badge">{{ $form->status }}</span>
                                       @elseif($form->status === 'accepted')
-                                          <span class="high-priority">{{ $form->status }}</span>
+                                          <span class="active-badge">{{ $form->status }}</span>
                                       @else
                                           <span class="disabled-badge">{{ $form->status }}</span>
                                       @endif
                                   </td>
+                                  <td class="py-4 px-6 text-center">
+                                      <button 
+                                          onclick="viewAdvertiserReferralForm({{ $form->id }})"
+                                          class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-3 rounded"
+                                      >
+                                          View
+                                      </button>
+                                  </td>
                               </tr>
                               @empty
                               <tr>
-                                  <td colspan="7" class="py-8 text-center text-gray-500">
+                                  <td colspan="8" class="py-8 text-center text-gray-500">
                                       No referral forms submitted yet.
                                   </td>
                               </tr>
@@ -108,61 +117,61 @@
           </div>
 
         <!-- Referral Form Modal -->
-        <div id="referralModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div id="referralModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
             <div class="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
                 <div class="mt-3">
-                    <h3 class="text-lg font-medium text-gray-900 text-center mb-4">Submit Referral Form</h3>
+                    <h3 class="text-lg font-medium text-foxecom-dark text-center mb-4">Submit Referral Form</h3>
                     <form id="referralForm" method="POST" action="{{ route('advertiser.referral.store') }}">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label for="referral_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="referral_name" class="block text-sm font-medium text-foxecom-dark mb-2">
                                     Referral Name *
                                 </label>
                                 <input 
                                     type="text" 
                                     id="referral_name" 
                                     name="referral_name" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
                                     required
                                 >
                             </div>
                             <div>
-                                <label for="company" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="company" class="block text-sm font-medium text-foxecom-dark mb-2">
                                     Company *
                                 </label>
                                 <input 
                                     type="text" 
                                     id="company" 
                                     name="company" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
                                     required
                                 >
                             </div>
                         </div>
                         
                         <div class="mb-4">
-                            <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="address" class="block text-sm font-medium text-foxecom-dark mb-2">
                                 Address *
                             </label>
                             <textarea 
                                 id="address" 
                                 name="address" 
                                 rows="3"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
                                 required
                             ></textarea>
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label for="template" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="template" class="block text-sm font-medium text-foxecom-dark mb-2">
                                     Template *
                                 </label>
                                 <select 
                                     id="template" 
                                     name="template" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
                                     required
                                 >
                                     <option value="">Select Template</option>
@@ -172,7 +181,7 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="expected_revenue" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label for="expected_revenue" class="block text-sm font-medium text-foxecom-dark mb-2">
                                     Expected Revenue ($) *
                                 </label>
                                 <input 
@@ -181,7 +190,7 @@
                                     name="expected_revenue" 
                                     step="0.01"
                                     min="0"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
                                     required
                                 >
                             </div>
@@ -197,12 +206,39 @@
                             </button>
                             <button 
                                 type="submit"
-                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                                class="bg-foxecom-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded shadow-foxecom"
                             >
                                 Submit Referral
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advertiser Referral View Modal -->
+        <div id="advertiserReferralViewModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+            <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-foxecom-dark">Referral Form Details</h3>
+                        <button onclick="closeAdvertiserReferralViewModal()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="advertiserReferralFormContent" class="space-y-4">
+                        <!-- Content will be loaded here -->
+                    </div>
+                    
+                    <div class="flex justify-end mt-6 pt-4 border-t">
+                        <button 
+                            onclick="closeAdvertiserReferralViewModal()"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                        >
+                            Close
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -217,10 +253,93 @@
             document.getElementById('referralForm').reset();
         }
 
+        function viewAdvertiserReferralForm(formId) {
+            fetch(`/advertiser/referral/${formId}/view`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const form = data.form;
+                    const content = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-foxecom-dark">Form ID</label>
+                                <p class="mt-1 text-sm text-gray-900">#${form.id}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foxecom-dark">Referral Name</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.referral_name}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foxecom-dark">Company</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.company}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foxecom-dark">Template</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.template.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-foxecom-dark">Address</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.address}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foxecom-dark">Expected Revenue</label>
+                                <p class="mt-1 text-sm text-gray-900">$${parseFloat(form.expected_revenue).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foxecom-dark">Status</label>
+                                <p class="mt-1 text-sm text-gray-900">
+                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                        form.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                        form.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                                        'bg-red-100 text-red-800'
+                                    }">
+                                        ${form.status.charAt(0).toUpperCase() + form.status.slice(1)}
+                                    </span>
+                                </p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foxecom-dark">Submitted Date</label>
+                                <p class="mt-1 text-sm text-gray-900">${new Date(form.created_at).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('advertiserReferralFormContent').innerHTML = content;
+                    document.getElementById('advertiserReferralViewModal').classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error loading form details');
+            });
+        }
+
+        function closeAdvertiserReferralViewModal() {
+            document.getElementById('advertiserReferralViewModal').classList.add('hidden');
+        }
+
         // Close modal when clicking outside
         document.getElementById('referralModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeReferralModal();
+            }
+        });
+
+        document.getElementById('advertiserReferralViewModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAdvertiserReferralViewModal();
             }
         });
         </script>

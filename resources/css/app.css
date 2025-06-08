@@ -7,12 +7,12 @@
     @apply shadow-md py-3 px-6 rounded-md transition duration-300;
 }
 
-.btn-purple {
-    @apply bg-bringlu-purple text-white;
+.btn-orange {
+    @apply bg-foxecom-orange text-white hover:bg-orange-600;
 }
 
 .btn-white {
-    @apply bg-bringlu-white;
+    @apply bg-white text-foxecom-dark border border-gray-300 hover:bg-gray-50;
 }
 
 .bringlu-input-plain {
@@ -31,8 +31,12 @@
     @apply bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-200 dark:text-red-900;
 }
 
+.pending-badge {
+    @apply bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900;
+}
+
 .show-link {
-        @apply underline text-blue-600 hover:text-blue-800 visited:text-purple-600
+    @apply underline text-blue-600 hover:text-blue-800 visited:text-purple-600
 }
 
 .high-priority {
@@ -57,4 +61,12 @@
 
 .reject-button {
     @apply bg-white border-slate-600 border border-red-400 text-red-400 rounded-md px-4 py-2 hover:bg-red-400 hover:text-red-600
+}
+
+.foxecom-card {
+    @apply bg-white rounded-xl shadow-foxecom hover:shadow-foxecom-lg transition-all duration-300 transform hover:-translate-y-1;
+}
+
+.unviewed-row {
+    @apply bg-red-50 hover:bg-red-100;
 }

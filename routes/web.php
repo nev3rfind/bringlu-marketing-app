@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AdvertiserController;
-use App\Http\Controllers\SocialController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 
@@ -62,23 +61,9 @@ Route::prefix('/advertiser')->middleware('auth', 'authorise-adv')->group(functio
     // Advert details conversion to PDF route
     Route::get('convert/{advert}', 'App\Http\Controllers\AdvertiserController@convertToPdf')->name('advert.topdf');
 
-     Route::post('/referral/store', 'App\Http\Controllers\AdvertiserController@storeReferralForm')->name('advertiser.referral.store');
+    Route::post('/referral/store', 'App\Http\Controllers\AdvertiserController@storeReferralForm')->name('advertiser.referral.store');
+    Route::post('/referral/{form}/view', 'App\Http\Controllers\AdvertiserController@viewReferralForm')->name('advertiser.referral.view');
 });
-
-// GitHub Authentication Routes
-
-Route::get('auth/github', [SocialController::class,
-'githubRedirect'])->name('login.github');
-
-Route::get('auth/github/callback', [SocialController::class,
-'githubCallback']);
-
-// Account selection route before login/register via GitHub
-Route::get('auth/account-type', [SocialController::class,
-'showAccountSelection'])->name('login.account-selection');
-
-Route::post('auth/continue-github', [SocialController::class,
-'getAccountType'])->name('login.continue-github');
 
 // Account type redirection route to business OR advertiser controller
 Route::get('account-type/{user}', [RegisteredUserController::class,

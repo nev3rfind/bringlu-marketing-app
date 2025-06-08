@@ -59,11 +59,20 @@ class AdvertiserController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        // Get referral form statistics for this user
+        $referralStats = [
+            'pending' => ReferralForm::where('user_id', Auth::user()->id)->where('status', 'pending')->count(),
+            'accepted' => ReferralForm::where('user_id', Auth::user()->id)->where('status', 'accepted')->count(),
+            'rejected' => ReferralForm::where('user_id', Auth::user()->id)->where('status', 'rejected')->count(),
+            'total' => ReferralForm::where('user_id', Auth::user()->id)->count()
+        ];
+
         return [
             'adverts' => Advert::get(), 
             'requestsCount' => $requestsCount,
             'dashboardCards' => $dashboardCards,
-            'referralForms' => $referralForms
+            'referralForms' => $referralForms,
+            'referralStats' => $referralStats
         ];
     }
 
@@ -187,9 +196,29 @@ class AdvertiserController extends Controller
             'address' => $request->address,
             'template' => $request->template,
             'expected_revenue' => $request->expected_revenue,
-            'status' => 'pending'
+            'status' => 'pending',
+            'viewed' => false
         ]);
 
         return redirect('/advertiser')->with('success-referral', 'Referral form submitted successfully');
+    }
+
+    /**
+     * View referral form details (for advertiser - read only)
+     *
+     * @param ReferralForm $form
+     * @return \Illuminate\Http\Response
+     */
+    public function viewReferralForm(ReferralForm $form)
+    {
+        // Check if the form belongs to the authenticated user
+        if ($form->user_id !== Auth::user()->id) {
+            abort(403);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'form' => $form->load('user')
+        ]);
     }
 }
