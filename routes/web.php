@@ -18,8 +18,16 @@ use Illuminate\Http\Request;
 |
 */
 
-// Home (index) route
+// Home route - redirect authenticated users to their dashboard
 Route::get('/', function () {
+    if (auth()->check()) {
+        $user = auth()->user();
+        if ($user->account_type === 1) {
+            return redirect('/advertiser');
+        } else {
+            return redirect('/business');
+        }
+    }
     return view('index');
 })->name('home');
 

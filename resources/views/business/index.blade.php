@@ -1,9 +1,9 @@
 @extends('layouts.app')
         @section('content')
         <x-alert />
-        <div class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 mt-16">
+        <div class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 mt-16 gap-6">
           <!-- Greeting Card -->
-          <div class="col-span-8 p-2 foxecom-card">
+          <div class="col-span-8 p-6 foxecom-card">
             <div class="p-2">
                 <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">Hello {{ auth()->user()->first_name }} {{ auth()->user()->last_name }},</h2>
                 <div class="my-4">
@@ -14,7 +14,7 @@
             </div>
           </div>
          <!-- Activity card -->
-         <div class="col-span-4 p-2 foxecom-card">
+         <div class="col-span-4 p-6 foxecom-card">
             <div class="p-2">
             <h2 class="font-bold text-3xl mb-2 text-center text-foxecom-dark">Referral Statistics</h2>
               <p class="text-lg text-foxecom-gray">Pending forms: <span class="font-bold text-yellow-600">{{ $referralStats['pending'] }}</span></p>
@@ -27,13 +27,13 @@
           </div>
 
           <!-- Referral Forms Table -->
-          <div class="col-span-12 p-4 foxecom-card">
+          <div class="col-span-12 p-6 foxecom-card">
               <div class="p-2">
                   <h2 class="font-bold text-3xl mb-2 text-center text-foxecom-dark">All Referral Forms</h2>
               </div>
-              <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
-                  <div class="overflow-y h-96">
-                      <table class="table-auto overflow-scroll w-full text-sm text-left text-gray-500">
+              <div class="w-full overflow-hidden rounded-lg shadow-md">
+                  <div class="w-full overflow-x-auto">
+                      <table class="w-full text-sm text-left text-gray-500">
                           <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                               <tr class="uppercase">
                                   <th scope="col" class="py-3 px-6">Form ID</th>
@@ -126,14 +126,14 @@
                             <button 
                                 id="acceptBtn"
                                 onclick="updateReferralStatus('accept')"
-                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-foxecom"
                             >
                                 Accept
                             </button>
                             <button 
                                 id="rejectBtn"
                                 onclick="updateReferralStatus('reject')"
-                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow-foxecom"
                             >
                                 Reject
                             </button>
@@ -267,8 +267,37 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    closeReferralViewModal();
-                    location.reload(); // Refresh to show updated status
+                    // Show success message
+                    alert(data.message);
+                    
+                    // Update the status in the modal
+                    const statusElement = document.querySelector('#referralFormContent .inline-flex');
+                    if (statusElement) {
+                        const newStatus = data.status;
+                        statusElement.className = `inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            newStatus === 'accepted' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`;
+                        statusElement.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+                    }
+                    
+                    // Hide action buttons
+                    document.getElementById('acceptBtn').style.display = 'none';
+                    document.getElementById('rejectBtn').style.display = 'none';
+                    
+                    // Update the table row
+                    const row = document.querySelector(`tr[onclick*="${currentFormId}"]`);
+                    if (row) {
+                        const statusCell = row.children[6];
+                        statusCell.innerHTML = `
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                data.status === 'accepted' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                            }">
+                                ${data.status.charAt(0).toUpperCase() + data.status.slice(1)}
+                            </span>
+                        `;
+                    }
+                } else {
+                    alert('Error updating form status: ' + (data.error || 'Unknown error'));
                 }
             })
             .catch(error => {

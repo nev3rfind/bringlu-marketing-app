@@ -1,35 +1,50 @@
 <header>
     <nav class="container flex items-center py-4 mt-4 sm:mt-12">
-        <div class="py-1 text-xl font-bold text-teal-600"><a href="{{url('/')}}">Bringlu</a></div>
-        <ul class="sm:flex flex-1 justify-end items-center gap-12 text-bringlu-blue uppercase text-sm">
-            <li class="mx-4 my-6 md:my-0 cursor-pointer hover:text-cyan-500 duration-500"><a href="{{url('/')}}">Home</a></li>
-            <li class="cursor-pointer hover:text-cyan-500 duration-500"><a href="{{url('/#about')}}">About</a></li>
+        <div class="py-1 text-xl font-bold text-foxecom-orange">
+            <a href="{{url('/')}}">FoxEcom</a>
+        </div>
+        <ul class="sm:flex flex-1 justify-end items-center gap-12 text-foxecom-dark uppercase text-sm">
             @if (Route::has('login'))
                 @auth
-                    <a href="{{ route('user.account-type', auth()->user()->id) }}"><button type="button" class="bg-green-500 text-white rounded-md px-7 py-3 uppercase">My account</button></a>
+                    <a href="{{ route('user.account-type', auth()->user()->id) }}">
+                        <button type="button" class="bg-foxecom-orange hover:bg-orange-600 text-white rounded-md px-7 py-3 uppercase shadow-foxecom">
+                            My account
+                        </button>
+                    </a>
                     
                     {{-- Only show Manage Clients for business customers (account_type = 2) --}}
                     @if(auth()->user()->account_type === 2)
-                        <a href="{{ route('clients.all') }}"><button type="button" class="bg-orange-500 text-white rounded-md px-7 py-3 uppercase">Manage clients</button></a>
+                        <a href="{{ route('clients.all') }}">
+                            <button type="button" class="bg-green-500 hover:bg-green-600 text-white rounded-md px-7 py-3 uppercase shadow-foxecom">
+                                Manage clients
+                            </button>
+                        </a>
                     @endif
                     
                     <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <a href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                            <a href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="text-foxecom-dark hover:text-foxecom-orange">
                                 {{ __('Log Out') }}
                             </a>
                     </form>
                     @else
-                        <a href="{{ route('login') }}"><button type="button" class="bg-bringlu-red text-white rounded-md px-7 py-3 uppercase">Login</button></a>
+                        <a href="{{ route('login') }}">
+                            <button type="button" class="bg-foxecom-orange hover:bg-orange-600 text-white rounded-md px-7 py-3 uppercase shadow-foxecom">
+                                Login
+                            </button>
+                        </a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}"><button type="button" class="bg-bringlu-blue text-white rounded-md px-7 py-3 uppercase">Register</button></a>
-                        <a href="{{ route('login.account-selection') }}"><button type="button" class="bg-black text-white rounded-md px-7 py-3 uppercase"><i class="fa-brands fa-github"></i></button></a>
+                        <a href="{{ route('register') }}">
+                            <button type="button" class="bg-white hover:bg-gray-50 text-foxecom-orange border-2 border-foxecom-orange rounded-md px-7 py-3 uppercase shadow-foxecom">
+                                Register
+                            </button>
+                        </a>
                     @endif
                 @endauth
             @endif
         </ul>
         <div class="flex sm:hidden flex-1 justify-end">
-            <i class="text-2xl fas fa-bars"></i>
+            <i class="text-2xl fas fa-bars text-foxecom-dark"></i>
         </div>
     </nav>
 </header>
