@@ -17,12 +17,13 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 // Home (index) route
 Route::get('/', function () {
     return view('index');
 })->name('home');
 
-// To display login user navigation buttons for authentication
+// Authentication routes - MUST be loaded before other routes
 require __DIR__.'/auth.php';
 
 // Business customer routes 
@@ -37,10 +38,9 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
     // Fixed clients routes
     Route::get('/business/clients/all', 'App\Http\Controllers\ClientController@showAll')->name('clients.all');
     Route::get('/business/clients/{client}/dashboard', 'App\Http\Controllers\ClientController@dashboard')->name('clients.dashboard');
-     Route::put('/business/clients/{client}/dashboard/card/{card}', [ClientController::class, 'updateCardValue'])->name('clients.dashboard.update');
-     Route::post('/business/clients/{client}/dashboard/reorder', [ClientController::class, 'updateCardPositions'])->name('clients.dashboard.reorder');
+    Route::put('/business/clients/{client}/dashboard/card/{card}', [ClientController::class, 'updateCardValue'])->name('clients.dashboard.update');
+    Route::post('/business/clients/{client}/dashboard/reorder', [ClientController::class, 'updateCardPositions'])->name('clients.dashboard.reorder');
     Route::get('/business/clients/{client}/forms', 'App\Http\Controllers\ClientController@forms')->name('clients.forms');
-    Route::get('/business/clients/{client}/forms', [ClientController::class, 'forms'])->name('clients.forms');
 
     // Referral form management routes
     Route::put('/business/referral/{form}/{action}', 'App\Http\Controllers\BusinessController@updateReferralStatus')->name('business.referral.update');

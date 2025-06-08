@@ -23,7 +23,13 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                // Redirect authenticated users to their appropriate dashboard
+                $user = Auth::user();
+                if ($user->account_type === 1) {
+                    return redirect('/advertiser');
+                } else {
+                    return redirect('/business');
+                }
             }
         }
 
