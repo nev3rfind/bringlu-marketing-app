@@ -218,7 +218,7 @@
                                        {{ in_array('megamog', old('commission_structure', [])) ? 'checked' : '' }}>
                                 <div class="ml-3 flex-1">
                                     <label for="megamog" class="text-sm font-medium text-foxecom-dark">
-                                        Commission Structure for Megamog theme
+                                        Commission Structure for <a href="https://foxecom.com/products/megamog-shopify-theme" target="_blank" class="text-foxecom-orange hover:text-orange-600 underline">Megamog theme</a>
                                     </label>
                                     <div class="mt-2">
                                         <img src="{{ asset('images/megamog_theme.png') }}" alt="Megamog Theme" 
@@ -234,7 +234,7 @@
                                        {{ in_array('minimog', old('commission_structure', [])) ? 'checked' : '' }}>
                                 <div class="ml-3 flex-1">
                                     <label for="minimog" class="text-sm font-medium text-foxecom-dark">
-                                        Commission Structure for Minimog theme
+                                        Commission Structure for <a href="https://foxecom.com/products/minimog-shopify-theme" target="_blank" class="text-foxecom-orange hover:text-orange-600 underline">Minimog theme</a>
                                     </label>
                                     <div class="mt-2">
                                         <img src="{{ asset('images/minimog_theme.png') }}" alt="Minimog Theme" 
@@ -274,6 +274,89 @@
                         @error('company_type_id')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <input id="terms_agreement" type="checkbox" required
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
+                                <label for="terms_agreement" class="ml-3 text-sm text-foxecom-dark">
+                                    By submitting this form, you've agreed to 
+                                    <a href="https://docs.foxecom.com/legal/fox-affiliate-program/terms-and-conditions" target="_blank" 
+                                       class="text-foxecom-orange hover:text-orange-600 underline font-medium">
+                                        Fox Affiliate Program Terms and Conditions
+                                    </a> *
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <input id="understand_checkbox" type="checkbox" required
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
+                                <label for="understand_checkbox" class="ml-3 text-sm text-foxecom-dark">
+                                    Yes I understand
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <input id="questions_checkbox" type="checkbox"
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
+                                <label for="questions_checkbox" class="ml-3 text-sm text-foxecom-dark">
+                                    Have questions? Drop us a message at 
+                                    <a href="mailto:affiliates@foxecom.com" class="text-foxecom-orange hover:text-orange-600 underline">
+                                        affiliates@foxecom.com
+                                    </a>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Policy -->
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <div class="flex items-start">
+                            <input id="payment_policy" type="checkbox" required
+                                   class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
+                            <label for="payment_policy" class="ml-3 text-sm text-foxecom-dark">
+                                Make sure you've read and understood the 
+                                <a href="https://docs.foxecom.com/legal/fox-affiliate-program/terms-and-conditions/payment-process-and-policy#commission-structure" target="_blank" 
+                                   class="text-blue-600 hover:text-blue-800 underline font-medium">
+                                    Payment, Process, & Policy
+                                </a> in Fox Affiliate Program T&C *
+                            </label>
+                        </div>
+                        
+                        <div class="mt-3 space-y-2">
+                            <div class="flex items-start">
+                                <input id="understand_policy" type="checkbox" required
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
+                                <label for="understand_policy" class="ml-3 text-sm text-foxecom-dark">
+                                    Yes I understand
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <input id="policy_questions" type="checkbox"
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
+                                <label for="policy_questions" class="ml-3 text-sm text-foxecom-dark">
+                                    Have questions? Drop us a message at 
+                                    <a href="mailto:affiliates@foxecom.com" class="text-foxecom-orange hover:text-orange-600 underline">
+                                        affiliates@foxecom.com
+                                    </a>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Affiliate Program Info -->
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                        <p class="text-sm text-foxecom-dark">
+                            In case you forgot<br>
+                            Visit <a href="https://foxecom.com/pages/affiliate" target="_blank" 
+                                   class="text-green-600 hover:text-green-800 underline font-medium">
+                                the official Affiliate Program
+                            </a> by FoxEcom today
+                        </p>
                     </div>
 
                     <!-- Password -->
@@ -333,6 +416,38 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                    <i class="fas fa-check text-green-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-4">You're all set! 👏</h3>
+                <div class="text-sm text-gray-600 space-y-3 mb-6">
+                    <p class="font-semibold text-green-600">Welcome aboard!</p>
+                    <p>We will reach out soon to send you information about our marketing goodies and product updates.</p>
+                    <p>Having questions? Drop us a message at 
+                        <a href="mailto:affiliates@foxecom.com" class="text-foxecom-orange hover:text-orange-600 underline">
+                            affiliates@foxecom.com
+                        </a>
+                    </p>
+                    <p class="font-semibold">Want to get a head start? 🔥</p>
+                </div>
+                <div class="flex justify-center space-x-3">
+                    <button onclick="openReferralModal()" 
+                            class="bg-foxecom-orange hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
+                        Submit your theme referral now
+                    </button>
+                    <button onclick="closeSuccessModal()" 
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                        Continue to Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         function toggleOtherInput() {
             const otherRadio = document.getElementById('other_title');
@@ -356,6 +471,25 @@
                 }
             });
         });
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.add('hidden');
+            window.location.href = '/advertiser';
+        }
+
+        function openReferralModal() {
+            // Close success modal first
+            document.getElementById('successModal').classList.add('hidden');
+            // Redirect to dashboard where referral modal can be opened
+            window.location.href = '/advertiser?openReferral=true';
+        }
+
+        // Check if registration was successful (you can set this via session)
+        @if(session('registration_success'))
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('successModal').classList.remove('hidden');
+            });
+        @endif
     </script>
 </body>
 </html>

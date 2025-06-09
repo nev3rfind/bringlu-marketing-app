@@ -343,5 +343,15 @@
                 closeAdvertiserReferralViewModal();
             }
         });
+
+        // Check if we should open referral modal (from registration success)
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('openReferral') === 'true') {
+                openReferralModal();
+                // Clean up URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
         </script>
         @endsection

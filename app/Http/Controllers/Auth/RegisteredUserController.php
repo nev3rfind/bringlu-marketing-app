@@ -84,6 +84,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        // Set session flag for success modal
+        session(['registration_success' => true]);
+
        return Self::checkUser($user);
     }
 }
