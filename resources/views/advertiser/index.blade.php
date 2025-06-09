@@ -68,10 +68,9 @@
                           <thead class="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
                               <tr class="uppercase">
                                   <th scope="col" class="py-3 px-6">Form ID</th>
-                                  <th scope="col" class="py-3 px-6">Referral Name</th>
-                                  <th scope="col" class="py-3 px-6">Company</th>
-                                  <th scope="col" class="py-3 px-6">Template</th>
-                                  <th scope="col" class="py-3 px-6">Expected Revenue</th>
+                                  <th scope="col" class="py-3 px-6">Theme Type</th>
+                                  <th scope="col" class="py-3 px-6">Purchase Email</th>
+                                  <th scope="col" class="py-3 px-6">License Code</th>
                                   <th scope="col" class="py-3 px-6 text-center">Submission Date</th>
                                   <th scope="col" class="py-3 px-6 text-center">Status</th>
                                   <th scope="col" class="py-3 px-6 text-center">Actions</th>
@@ -81,12 +80,9 @@
                               @forelse($referralForms as $form)
                               <tr class="bg-white border-b hover:bg-gray-50">
                                   <td class="py-4 px-6">#{{ $form->id }}</td>
-                                  <td class="py-4 px-6">{{ $form->referral_name }}</td>
-                                  <td class="py-4 px-6">{{ $form->company }}</td>
-                                  <td class="py-4 px-6">
-                                      {{ ucwords(str_replace('_', ' ', $form->template)) }}
-                                  </td>
-                                  <td class="py-4 px-6">${{ number_format($form->expected_revenue, 2) }}</td>
+                                  <td class="py-4 px-6">{{ $form->theme_type_text }}</td>
+                                  <td class="py-4 px-6">{{ $form->purchase_email }}</td>
+                                  <td class="py-4 px-6">{{ $form->license_code ?: 'N/A' }}</td>
                                   <td class="py-4 px-6 text-center">
                                       {{ \Carbon\Carbon::parse($form->created_at)->format('M d, Y') }}
                                   </td>
@@ -110,7 +106,7 @@
                               </tr>
                               @empty
                               <tr>
-                                  <td colspan="8" class="py-8 text-center text-gray-500">
+                                  <td colspan="7" class="py-8 text-center text-gray-500">
                                       No referral forms submitted yet.
                                   </td>
                               </tr>
@@ -123,81 +119,114 @@
 
         <!-- Referral Form Modal -->
         <div id="referralModal" class="foxecom-modal hidden">
-            <div class="foxecom-modal-content">
+            <div class="foxecom-modal-content max-w-2xl">
                 <h3 class="text-lg font-medium text-foxecom-dark text-center mb-4">Submit Referral Form</h3>
                 <form id="referralForm" method="POST" action="{{ route('advertiser.referral.store') }}">
                     @csrf
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="referral_name" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                Referral Name *
-                            </label>
-                            <input 
-                                type="text" 
-                                id="referral_name" 
-                                name="referral_name" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
-                                required
-                            >
-                        </div>
-                        <div>
-                            <label for="company" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                Company *
-                            </label>
-                            <input 
-                                type="text" 
-                                id="company" 
-                                name="company" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
-                                required
-                            >
-                        </div>
-                    </div>
                     
-                    <div class="mb-4">
-                        <label for="address" class="block text-sm font-medium text-foxecom-dark mb-2">
-                            Address *
+                    <!-- Referral Details Text Area -->
+                    <div class="mb-6">
+                        <label for="referral_details" class="block text-sm font-medium text-foxecom-dark mb-2">
+                            Please provide details about your referral *
                         </label>
                         <textarea 
-                            id="address" 
-                            name="address" 
-                            rows="3"
+                            id="referral_details" 
+                            name="referral_details" 
+                            rows="4"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
+                            placeholder="Your answer"
                             required
                         ></textarea>
                     </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="template" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                Template *
-                            </label>
-                            <select 
-                                id="template" 
-                                name="template" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
-                                required
-                            >
-                                <option value="">Select Template</option>
-                                <option value="foxecom_commercial">Foxecom Commercial Template</option>
-                                <option value="foxecom_baked">Foxecom Baked</option>
-                                <option value="foxecom_super_shopify">Foxecom Super Shopify</option>
-                            </select>
+
+                    <!-- Theme Type Selection -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-foxecom-dark mb-3">
+                            Which theme by FoxEcom are you referring? *
+                        </label>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <input id="minimog_radio" type="radio" value="minimog" name="theme_type" 
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
+                                       onchange="toggleOtherThemeInput()" required>
+                                <label for="minimog_radio" class="ml-3 text-sm font-medium text-foxecom-dark">
+                                    Minimog
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="megamog_radio" type="radio" value="megamog" name="theme_type" 
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
+                                       onchange="toggleOtherThemeInput()" required>
+                                <label for="megamog_radio" class="ml-3 text-sm font-medium text-foxecom-dark">
+                                    Megamog
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="other_radio" type="radio" value="other" name="theme_type" 
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
+                                       onchange="toggleOtherThemeInput()" required>
+                                <label for="other_radio" class="ml-3 text-sm font-medium text-foxecom-dark">
+                                    Other:
+                                </label>
+                                <input type="text" name="other_theme" id="other_theme_input" 
+                                       class="ml-2 flex-1 border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
+                                       placeholder="Please specify" style="display: none;">
+                            </div>
                         </div>
-                        <div>
-                            <label for="expected_revenue" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                Expected Revenue ($) *
-                            </label>
-                            <input 
-                                type="number" 
-                                id="expected_revenue" 
-                                name="expected_revenue" 
-                                step="0.01"
-                                min="0"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
-                                required
-                            >
-                        </div>
+                    </div>
+
+                    <!-- Purchase Email -->
+                    <div class="mb-6">
+                        <label for="purchase_email" class="block text-sm font-medium text-foxecom-dark mb-2">
+                            What is the email used to purchase the theme? *
+                        </label>
+                        <p class="text-xs text-gray-600 mb-3">
+                            <strong>The email must match our record for the lead to be counted as a successful referral.</strong>
+                        </p>
+                        <p class="text-xs text-gray-500 mb-3">
+                            If you bought the theme, fill your email address.<br>
+                            If your customer bought the theme, fill their email address.
+                        </p>
+                        <input 
+                            type="email" 
+                            id="purchase_email" 
+                            name="purchase_email" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
+                            placeholder="email@example.com"
+                            required
+                        >
+                    </div>
+
+                    <!-- License Code -->
+                    <div class="mb-6">
+                        <label for="license_code" class="block text-sm font-medium text-foxecom-dark mb-2">
+                            What is the theme's license code? *
+                        </label>
+                        <input 
+                            type="text" 
+                            id="license_code" 
+                            name="license_code" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
+                            placeholder="License code"
+                            required
+                        >
+                    </div>
+
+                    <!-- Shopify Store URL (for non-Minimog/Megamog themes) -->
+                    <div class="mb-6" id="shopify_url_section" style="display: none;">
+                        <label for="shopify_store_url" class="block text-sm font-medium text-foxecom-dark mb-2">
+                            Shopify Store URL
+                        </label>
+                        <p class="text-xs text-gray-500 mb-3">
+                            For themes that are not Minimog and Megamog, please fill in the Shopify store's URL that purchased the theme
+                        </p>
+                        <input 
+                            type="url" 
+                            id="shopify_store_url" 
+                            name="shopify_store_url" 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
+                            placeholder="https://yourstore.myshopify.com"
+                        >
                     </div>
                     
                     <div class="flex justify-end space-x-3 mt-6">
@@ -216,6 +245,30 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Referral Success Modal -->
+        <div id="referralSuccessModal" class="foxecom-modal hidden">
+            <div class="foxecom-modal-content">
+                <div class="text-center">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                        <i class="fas fa-check text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-foxecom-dark mb-4">That's it! You're done!</h3>
+                    <p class="text-sm text-gray-600 mb-6">
+                        Having questions? Drop us a message at 
+                        <a href="mailto:affiliates@foxecom.com" class="text-foxecom-orange hover:text-orange-600 underline">
+                            affiliates@foxecom.com
+                        </a>
+                    </p>
+                    <button 
+                        onclick="closeReferralSuccessModal()"
+                        class="foxecom-btn-primary"
+                    >
+                        Continue
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -252,7 +305,71 @@
         function closeReferralModal() {
             document.getElementById('referralModal').classList.add('hidden');
             document.getElementById('referralForm').reset();
+            toggleOtherThemeInput(); // Reset other theme input visibility
         }
+
+        function closeReferralSuccessModal() {
+            document.getElementById('referralSuccessModal').classList.add('hidden');
+            // Reload page to show updated referral forms
+            window.location.reload();
+        }
+
+        function toggleOtherThemeInput() {
+            const otherRadio = document.getElementById('other_radio');
+            const otherInput = document.getElementById('other_theme_input');
+            const shopifySection = document.getElementById('shopify_url_section');
+            const minimogRadio = document.getElementById('minimog_radio');
+            const megamogRadio = document.getElementById('megamog_radio');
+            
+            if (otherRadio.checked) {
+                otherInput.style.display = 'block';
+                otherInput.required = true;
+                shopifySection.style.display = 'block';
+                document.getElementById('shopify_store_url').required = true;
+            } else {
+                otherInput.style.display = 'none';
+                otherInput.required = false;
+                otherInput.value = '';
+                
+                // Show Shopify URL section for non-Minimog/Megamog themes
+                if (!minimogRadio.checked && !megamogRadio.checked) {
+                    shopifySection.style.display = 'block';
+                    document.getElementById('shopify_store_url').required = true;
+                } else {
+                    shopifySection.style.display = 'none';
+                    document.getElementById('shopify_store_url').required = false;
+                    document.getElementById('shopify_store_url').value = '';
+                }
+            }
+        }
+
+        // Handle referral form submission
+        document.getElementById('referralForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeReferralModal();
+                    document.getElementById('referralSuccessModal').classList.remove('hidden');
+                } else {
+                    alert('Error submitting form. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting form. Please try again.');
+            });
+        });
 
         function viewAdvertiserReferralForm(formId) {
             fetch(`/advertiser/referral/${formId}/view`, {
@@ -273,25 +390,27 @@
                                 <p class="mt-1 text-sm text-gray-900">#${form.id}</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-foxecom-dark">Referral Name</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.referral_name}</p>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-foxecom-dark">Company</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.company}</p>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-foxecom-dark">Template</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.template.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
+                                <label class="block text-sm font-medium text-foxecom-dark">Theme Type</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.theme_type_text}</p>
                             </div>
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-foxecom-dark">Address</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.address}</p>
+                                <label class="block text-sm font-medium text-foxecom-dark">Referral Details</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.referral_details}</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-foxecom-dark">Expected Revenue</label>
-                                <p class="mt-1 text-sm text-gray-900">$${parseFloat(form.expected_revenue).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                                <label class="block text-sm font-medium text-foxecom-dark">Purchase Email</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.purchase_email}</p>
                             </div>
+                            <div>
+                                <label class="block text-sm font-medium text-foxecom-dark">License Code</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.license_code || 'N/A'}</p>
+                            </div>
+                            ${form.shopify_store_url ? `
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-foxecom-dark">Shopify Store URL</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.shopify_store_url}</p>
+                            </div>
+                            ` : ''}
                             <div>
                                 <label class="block text-sm font-medium text-foxecom-dark">Status</label>
                                 <p class="mt-1 text-sm text-gray-900">
@@ -335,6 +454,12 @@
         document.getElementById('referralModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeReferralModal();
+            }
+        });
+
+        document.getElementById('referralSuccessModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeReferralSuccessModal();
             }
         });
 

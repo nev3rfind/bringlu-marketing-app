@@ -182,25 +182,27 @@ class AdvertiserController extends Controller
     public function storeReferralForm(Request $request)
     {
         $request->validate([
-            'referral_name' => 'required|string|max:255',
-            'company' => 'required|string|max:255',
-            'address' => 'required|string',
-            'template' => 'required|in:foxecom_commercial,foxecom_baked,foxecom_super_shopify',
-            'expected_revenue' => 'required|numeric|min:0'
+            'referral_details' => 'required|string',
+            'theme_type' => 'required|in:minimog,megamog,other',
+            'other_theme' => 'required_if:theme_type,other|string|max:255',
+            'purchase_email' => 'required|email|max:255',
+            'license_code' => 'required|string|max:255',
+            'shopify_store_url' => 'nullable|url|max:255'
         ]);
 
         ReferralForm::create([
             'user_id' => Auth::user()->id,
-            'referral_name' => $request->referral_name,
-            'company' => $request->company,
-            'address' => $request->address,
-            'template' => $request->template,
-            'expected_revenue' => $request->expected_revenue,
+            'referral_details' => $request->referral_details,
+            'theme_type' => $request->theme_type,
+            'other_theme' => $request->theme_type === 'other' ? $request->other_theme : null,
+            'purchase_email' => $request->purchase_email,
+            'license_code' => $request->license_code,
+            'shopify_store_url' => $request->shopify_store_url,
             'status' => 'pending',
             'viewed' => false
         ]);
 
-        return redirect('/advertiser')->with('success-referral', 'Referral form submitted successfully');
+        return response()->json(['success' => true]);
     }
 
     /**

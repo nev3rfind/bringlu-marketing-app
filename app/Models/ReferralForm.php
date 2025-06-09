@@ -11,11 +11,12 @@ class ReferralForm extends Model
 
     protected $fillable = [
         'user_id',
-        'referral_name',
-        'company',
-        'address',
-        'template',
-        'expected_revenue',
+        'referral_details',
+        'theme_type',
+        'other_theme',
+        'purchase_email',
+        'license_code',
+        'shopify_store_url',
         'status',
         'viewed'
     ];
@@ -26,13 +27,29 @@ class ReferralForm extends Model
     ];
 
     protected $casts = [
-        'viewed' => 'boolean',
-        'expected_revenue' => 'decimal:2'
+        'viewed' => 'boolean'
     ];
 
     // A referral form belongs to a user (advertiser)
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the theme type as a formatted string
+     */
+    public function getThemeTypeTextAttribute()
+    {
+        switch ($this->theme_type) {
+            case 'minimog':
+                return 'Minimog';
+            case 'megamog':
+                return 'Megamog';
+            case 'other':
+                return $this->other_theme ?: 'Other';
+            default:
+                return 'Not specified';
+        }
     }
 }

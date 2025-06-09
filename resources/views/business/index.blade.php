@@ -39,10 +39,9 @@
                               <tr class="uppercase">
                                   <th scope="col" class="py-3 px-6">Form ID</th>
                                   <th scope="col" class="py-3 px-6">Submitted By</th>
-                                  <th scope="col" class="py-3 px-6">Referral Name</th>
-                                  <th scope="col" class="py-3 px-6">Company</th>
-                                  <th scope="col" class="py-3 px-6">Template</th>
-                                  <th scope="col" class="py-3 px-6">Expected Revenue</th>
+                                  <th scope="col" class="py-3 px-6">Theme Type</th>
+                                  <th scope="col" class="py-3 px-6">Purchase Email</th>
+                                  <th scope="col" class="py-3 px-6">License Code</th>
                                   <th scope="col" class="py-3 px-6 text-center">Status</th>
                                   <th scope="col" class="py-3 px-6 text-center">Viewed</th>
                                   <th scope="col" class="py-3 px-6 text-center">Submitted Date</th>
@@ -55,10 +54,9 @@
                                   onclick="viewReferralForm({{ $form->id }})">
                                   <td class="py-4 px-6 font-medium">#{{ $form->id }}</td>
                                   <td class="py-4 px-6">{{ $form->user->first_name }} {{ $form->user->last_name }}</td>
-                                  <td class="py-4 px-6">{{ $form->referral_name }}</td>
-                                  <td class="py-4 px-6">{{ $form->company }}</td>
-                                  <td class="py-4 px-6">{{ ucwords(str_replace('_', ' ', $form->template)) }}</td>
-                                  <td class="py-4 px-6">${{ number_format($form->expected_revenue, 2) }}</td>
+                                  <td class="py-4 px-6">{{ $form->theme_type_text }}</td>
+                                  <td class="py-4 px-6">{{ $form->purchase_email }}</td>
+                                  <td class="py-4 px-6">{{ $form->license_code ?: 'N/A' }}</td>
                                   <td class="py-4 px-6 text-center">
                                       @if($form->status === 'pending')
                                           <span class="pending-badge">Pending</span>
@@ -89,7 +87,7 @@
                               </tr>
                               @empty
                               <tr>
-                                  <td colspan="10" class="py-8 text-center text-gray-500">
+                                  <td colspan="9" class="py-8 text-center text-gray-500">
                                       No referral forms submitted yet.
                                   </td>
                               </tr>
@@ -200,25 +198,27 @@
                                 <p class="mt-1 text-sm text-gray-900">${form.user.first_name} ${form.user.last_name}</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-foxecom-dark">Referral Name</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.referral_name}</p>
+                                <label class="block text-sm font-medium text-foxecom-dark">Theme Type</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.theme_type_text}</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-foxecom-dark">Company</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.company}</p>
+                                <label class="block text-sm font-medium text-foxecom-dark">Purchase Email</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.purchase_email}</p>
                             </div>
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-foxecom-dark">Address</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.address}</p>
+                                <label class="block text-sm font-medium text-foxecom-dark">Referral Details</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.referral_details}</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-foxecom-dark">Template</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.template.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
+                                <label class="block text-sm font-medium text-foxecom-dark">License Code</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.license_code || 'N/A'}</p>
                             </div>
+                            ${form.shopify_store_url ? `
                             <div>
-                                <label class="block text-sm font-medium text-foxecom-dark">Expected Revenue</label>
-                                <p class="mt-1 text-sm text-gray-900">$${parseFloat(form.expected_revenue).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                                <label class="block text-sm font-medium text-foxecom-dark">Shopify Store URL</label>
+                                <p class="mt-1 text-sm text-gray-900">${form.shopify_store_url}</p>
                             </div>
+                            ` : ''}
                             <div>
                                 <label class="block text-sm font-medium text-foxecom-dark">Status</label>
                                 <p class="mt-1 text-sm text-gray-900">
@@ -266,7 +266,7 @@
                         row.classList.remove('unviewed-row');
                         row.classList.add('bg-white');
                         // Update viewed icon
-                        const viewedCell = row.children[7];
+                        const viewedCell = row.children[6];
                         viewedCell.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i></span>';
                     }
                 }
@@ -310,7 +310,7 @@
                     // Update the table row
                     const row = document.querySelector(`tr[onclick*="${currentFormId}"]`);
                     if (row) {
-                        const statusCell = row.children[6];
+                        const statusCell = row.children[5];
                         const statusClass = data.status === 'accepted' ? 'active-badge' : 'disabled-badge';
                         const statusText = data.status.charAt(0).toUpperCase() + data.status.slice(1);
                         statusCell.innerHTML = `<span class="${statusClass}">${statusText}</span>`;

@@ -26,10 +26,9 @@
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
                         <tr>
                             <th class="px-6 py-3 text-left">Form ID</th>
-                            <th class="px-6 py-3 text-left">Referral Name</th>
-                            <th class="px-6 py-3 text-left">Company</th>
-                            <th class="px-6 py-3 text-left">Template</th>
-                            <th class="px-6 py-3 text-left">Expected Revenue</th>
+                            <th class="px-6 py-3 text-left">Theme Type</th>
+                            <th class="px-6 py-3 text-left">Purchase Email</th>
+                            <th class="px-6 py-3 text-left">License Code</th>
                             <th class="px-6 py-3 text-left">Submitted</th>
                             <th class="px-6 py-3 text-left">Status</th>
                             <th class="px-6 py-3 text-left">Viewed</th>
@@ -40,10 +39,9 @@
                         @foreach($referralForms as $form)
                         <tr class="{{ !$form->viewed ? 'unviewed-row' : 'bg-white' }} border-b hover:bg-gray-50">
                             <td class="px-6 py-4 font-medium">#{{ $form->id }}</td>
-                            <td class="px-6 py-4">{{ $form->referral_name }}</td>
-                            <td class="px-6 py-4">{{ $form->company }}</td>
-                            <td class="px-6 py-4">{{ ucwords(str_replace('_', ' ', $form->template)) }}</td>
-                            <td class="px-6 py-4">${{ number_format($form->expected_revenue, 2) }}</td>
+                            <td class="px-6 py-4">{{ $form->theme_type_text }}</td>
+                            <td class="px-6 py-4">{{ $form->purchase_email }}</td>
+                            <td class="px-6 py-4">{{ $form->license_code ?: 'N/A' }}</td>
                             <td class="px-6 py-4">{{ \Carbon\Carbon::parse($form->created_at)->format('M d, Y H:i') }}</td>
                             <td class="px-6 py-4">
                                 @if($form->status === 'pending')
@@ -187,25 +185,27 @@ function viewClientReferralForm(formId) {
                         <p class="mt-1 text-sm text-gray-900">${form.user.first_name} ${form.user.last_name}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-foxecom-dark">Referral Name</label>
-                        <p class="mt-1 text-sm text-gray-900">${form.referral_name}</p>
+                        <label class="block text-sm font-medium text-foxecom-dark">Theme Type</label>
+                        <p class="mt-1 text-sm text-gray-900">${form.theme_type_text}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-foxecom-dark">Company</label>
-                        <p class="mt-1 text-sm text-gray-900">${form.company}</p>
+                        <label class="block text-sm font-medium text-foxecom-dark">Purchase Email</label>
+                        <p class="mt-1 text-sm text-gray-900">${form.purchase_email}</p>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-foxecom-dark">Address</label>
-                        <p class="mt-1 text-sm text-gray-900">${form.address}</p>
+                        <label class="block text-sm font-medium text-foxecom-dark">Referral Details</label>
+                        <p class="mt-1 text-sm text-gray-900">${form.referral_details}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-foxecom-dark">Template</label>
-                        <p class="mt-1 text-sm text-gray-900">${form.template.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
+                        <label class="block text-sm font-medium text-foxecom-dark">License Code</label>
+                        <p class="mt-1 text-sm text-gray-900">${form.license_code || 'N/A'}</p>
                     </div>
+                    ${form.shopify_store_url ? `
                     <div>
-                        <label class="block text-sm font-medium text-foxecom-dark">Expected Revenue</label>
-                        <p class="mt-1 text-sm text-gray-900">$${parseFloat(form.expected_revenue).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                        <label class="block text-sm font-medium text-foxecom-dark">Shopify Store URL</label>
+                        <p class="mt-1 text-sm text-gray-900">${form.shopify_store_url}</p>
                     </div>
+                    ` : ''}
                     <div>
                         <label class="block text-sm font-medium text-foxecom-dark">Status</label>
                         <p class="mt-1 text-sm text-gray-900">
@@ -254,7 +254,7 @@ function viewClientReferralForm(formId) {
                     row.classList.remove('unviewed-row');
                     row.classList.add('bg-white');
                     // Update viewed icon
-                    const viewedCell = row.children[7];
+                    const viewedCell = row.children[6];
                     viewedCell.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i></span>';
                 }
             });
@@ -300,7 +300,7 @@ function updateClientReferralStatus(action) {
             const rows = document.querySelectorAll('tr');
             rows.forEach(row => {
                 if (row.innerHTML.includes(`#${currentClientFormId}`)) {
-                    const statusCell = row.children[6];
+                    const statusCell = row.children[5];
                     const statusClass = data.status === 'accepted' ? 'active-badge' : 'disabled-badge';
                     const statusText = data.status.charAt(0).toUpperCase() + data.status.slice(1);
                     statusCell.innerHTML = `<span class="${statusClass}">${statusText}</span>`;
