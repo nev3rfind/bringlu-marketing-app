@@ -22,8 +22,8 @@
             </div>
 
             <!-- Register Form -->
-            <div class="foxecom-card p-8">
-                <form method="POST" action="{{ route('register') }}" class="space-y-6">
+            <div class="foxecom-card p-8" id="registrationForm">
+                <form method="POST" action="{{ route('register') }}" class="space-y-6" id="registerForm">
                     @csrf
 
                     <!-- Personal Information -->
@@ -408,10 +408,11 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" 
+                    <button type="submit" id="submitBtn"
                             class="w-full bg-foxecom-orange hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105 shadow-foxecom">
                         <i class="fas fa-user-plus mr-2"></i>
-                        Register as Partner
+                        <span id="submitText">Register as Partner</span>
+                        <i class="fas fa-spinner fa-spin ml-2 hidden" id="loadingSpinner"></i>
                     </button>
                 </form>
 
@@ -496,12 +497,50 @@
             window.location.href = '/advertiser?openReferral=true';
         }
 
-        // Check if registration was successful (you can set this via session)
-        @if(session('registration_success'))
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById('successModal').classList.remove('hidden');
+        // Handle form submission with AJAX
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitText.textContent = 'Registering...';
+            loadingSpinner.classList.remove('hidden');
+            
+            // Create FormData object
+            const formData = new FormData(this);
+            
+            // Submit form via fetch
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Hide the registration form
+                    document.getElementById('registrationForm').style.display = 'none';
+                    // Show success modal
+                    document.getElementById('successModal').classList.remove('hidden');
+                } else {
+                    // If there are validation errors, reload the page to show them
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Reset button state
+                submitBtn.disabled = false;
+                submitText.textContent = 'Register as Partner';
+                loadingSpinner.classList.add('hidden');
+                alert('An error occurred. Please try again.');
             });
-        @endif
+        });
     </script>
 </body>
 </html>

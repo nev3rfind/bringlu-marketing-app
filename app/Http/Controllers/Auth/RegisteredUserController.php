@@ -88,6 +88,11 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        // For AJAX requests, return success response
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json(['success' => true, 'redirect' => '/advertiser']);
+        }
+
         // Set session flag for success modal
         session(['registration_success' => true]);
 
