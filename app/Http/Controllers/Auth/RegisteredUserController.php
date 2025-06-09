@@ -54,6 +54,7 @@ class RegisteredUserController extends Controller
             'paypal_email' => ['required', 'email', 'max:255'],
             'commission_structure' => ['required', 'array', 'min:1'],
             'commission_structure.*' => ['string', 'in:megamog,minimog'],
+            'company_type_id' => ['required', 'integer', 'in:1,2'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -74,6 +75,7 @@ class RegisteredUserController extends Controller
             'company_website' => $request->company_website,
             'paypal_email' => $request->paypal_email,
             'commission_structure' => json_encode($request->commission_structure),
+            'company_type_id' => $request->company_type_id,
             'account_type' => 1, // All users are partners now
             'password' => Hash::make($request->password),
         ]);

@@ -16,6 +16,7 @@
                             <th scope="col" class="py-3 px-6 text-left">Title</th>
                             <th scope="col" class="py-3 px-6 text-left">Company Website</th>
                             <th scope="col" class="py-3 px-6 text-left">PayPal Email</th>
+                            <th scope="col" class="py-3 px-6 text-left">Company Type</th>
                             <th scope="col" class="py-3 px-6 text-center">Register Date</th>
                             <th scope="col" class="py-3 px-6 text-center">Actions</th>
                         </tr>
@@ -39,6 +40,11 @@
                                 @endif
                             </td>
                             <td class="py-4 px-6">{{ $client->paypal_email ?? 'Not provided' }}</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $client->company_type_id == 1 ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
+                                    {{ $client->company_type_text }}
+                                </span>
+                            </td>
                             <td class="py-4 px-6 text-center">
                                 {{ \Carbon\Carbon::parse($client->created_at)->format('Y-m-d') }}
                             </td>

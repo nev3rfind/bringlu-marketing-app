@@ -248,6 +248,34 @@
                         @enderror
                     </div>
 
+                    <!-- Company Type Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-foxecom-dark mb-3">Company Type *</label>
+                        <div class="space-y-3">
+                            <div class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <input id="foxecom_partner" type="radio" value="1" name="company_type_id" 
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
+                                       {{ old('company_type_id') == '1' ? 'checked' : '' }} required>
+                                <label for="foxecom_partner" class="ml-3 text-sm font-medium text-foxecom-dark">
+                                    <i class="fas fa-handshake text-foxecom-orange mr-2"></i>
+                                    FoxEcom Partner
+                                </label>
+                            </div>
+                            <div class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <input id="foxecom_customer" type="radio" value="2" name="company_type_id" 
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
+                                       {{ old('company_type_id') == '2' ? 'checked' : '' }} required>
+                                <label for="foxecom_customer" class="ml-3 text-sm font-medium text-foxecom-dark">
+                                    <i class="fas fa-user-circle text-foxecom-orange mr-2"></i>
+                                    FoxEcom Customer
+                                </label>
+                            </div>
+                        </div>
+                        @error('company_type_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Password -->
                     <div>
                         <label for="password" class="block text-sm font-medium text-foxecom-dark mb-2">

@@ -32,7 +32,8 @@ class User extends Authenticatable
         'company_website',
         'paypal_email',
         'commission_structure',
-        'other_title'
+        'other_title',
+        'company_type_id'
     ];
 
     /**
@@ -81,5 +82,20 @@ class User extends Authenticatable
         }
         
         return implode(', ', $themes);
+    }
+
+    /**
+     * Get the company type as a formatted string
+     */
+    public function getCompanyTypeTextAttribute()
+    {
+        switch ($this->company_type_id) {
+            case 1:
+                return 'FoxEcom Partner';
+            case 2:
+                return 'FoxEcom Customer';
+            default:
+                return 'Not specified';
+        }
     }
 }
