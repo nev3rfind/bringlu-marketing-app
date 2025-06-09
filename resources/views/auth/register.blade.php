@@ -280,7 +280,7 @@
                     <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
                         <div class="space-y-3">
                             <div class="flex items-start">
-                                <input id="terms_agreement" type="checkbox" required
+                                <input id="terms_agreement" type="checkbox" name="terms_agreement" value="1" required
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
                                 <label for="terms_agreement" class="ml-3 text-sm text-foxecom-dark">
                                     By submitting this form, you've agreed to 
@@ -292,7 +292,7 @@
                             </div>
                             
                             <div class="flex items-start">
-                                <input id="understand_checkbox" type="checkbox" required
+                                <input id="understand_checkbox" type="checkbox" name="understand_checkbox" value="1" required
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
                                 <label for="understand_checkbox" class="ml-3 text-sm text-foxecom-dark">
                                     Yes I understand
@@ -300,7 +300,7 @@
                             </div>
                             
                             <div class="flex items-start">
-                                <input id="questions_checkbox" type="checkbox"
+                                <input id="questions_checkbox" type="checkbox" name="questions_checkbox" value="1"
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
                                 <label for="questions_checkbox" class="ml-3 text-sm text-foxecom-dark">
                                     Have questions? Drop us a message at 
@@ -310,12 +310,18 @@
                                 </label>
                             </div>
                         </div>
+                        @error('terms_agreement')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        @error('understand_checkbox')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Payment Policy -->
                     <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
                         <div class="flex items-start">
-                            <input id="payment_policy" type="checkbox" required
+                            <input id="payment_policy" type="checkbox" name="payment_policy" value="1" required
                                    class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
                             <label for="payment_policy" class="ml-3 text-sm text-foxecom-dark">
                                 Make sure you've read and understood the 
@@ -328,7 +334,7 @@
                         
                         <div class="mt-3 space-y-2">
                             <div class="flex items-start">
-                                <input id="understand_policy" type="checkbox" required
+                                <input id="understand_policy" type="checkbox" name="understand_policy" value="1" required
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
                                 <label for="understand_policy" class="ml-3 text-sm text-foxecom-dark">
                                     Yes I understand
@@ -336,7 +342,7 @@
                             </div>
                             
                             <div class="flex items-start">
-                                <input id="policy_questions" type="checkbox"
+                                <input id="policy_questions" type="checkbox" name="policy_questions" value="1"
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1">
                                 <label for="policy_questions" class="ml-3 text-sm text-foxecom-dark">
                                     Have questions? Drop us a message at 
@@ -346,6 +352,12 @@
                                 </label>
                             </div>
                         </div>
+                        @error('payment_policy')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        @error('understand_policy')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Affiliate Program Info -->

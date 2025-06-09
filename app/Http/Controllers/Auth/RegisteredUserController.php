@@ -55,6 +55,10 @@ class RegisteredUserController extends Controller
             'commission_structure' => ['required', 'array', 'min:1'],
             'commission_structure.*' => ['string', 'in:megamog,minimog'],
             'company_type_id' => ['required', 'integer', 'in:1,2'],
+            'terms_agreement' => ['required', 'accepted'],
+            'understand_checkbox' => ['required', 'accepted'],
+            'payment_policy' => ['required', 'accepted'],
+            'understand_policy' => ['required', 'accepted'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -87,6 +91,6 @@ class RegisteredUserController extends Controller
         // Set session flag for success modal
         session(['registration_success' => true]);
 
-       return Self::checkUser($user);
+        return Self::checkUser($user);
     }
 }
