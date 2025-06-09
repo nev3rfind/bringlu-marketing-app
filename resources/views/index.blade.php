@@ -27,7 +27,7 @@
                 </h1>
                 
                 <p class="text-xl md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
-                    Connect businesses with advertisers through our comprehensive referral management system
+                    Best referral management system ever!
                 </p>
                 
                 <!-- Action Buttons -->
@@ -45,33 +45,6 @@
                             Register Now
                         </button>
                     </a>
-                </div>
-                
-                <!-- Additional Info -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="text-orange-500 text-3xl mb-4">
-                            <i class="fas fa-handshake"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-2 text-gray-900">Connect</h3>
-                        <p class="text-gray-600">Bridge the gap between businesses and advertisers</p>
-                    </div>
-                    
-                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="text-orange-500 text-3xl mb-4">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-2 text-gray-900">Grow</h3>
-                        <p class="text-gray-600">Expand your network and increase revenue</p>
-                    </div>
-                    
-                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                        <div class="text-orange-500 text-3xl mb-4">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-2 text-gray-900">Manage</h3>
-                        <p class="text-gray-600">Comprehensive referral management tools</p>
-                    </div>
                 </div>
             </div>
         </div>

@@ -7,8 +7,8 @@
             <div class="p-2">
                 <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">Hello {{ auth()->user()->first_name }} {{ auth()->user()->last_name }},</h2>
                 <div class="my-4">
-                  <a role='button' href='#' class="text-white bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300 shadow-foxecom">
-                    Business customer <i class="fa-solid fa-briefcase ml-2"></i>
+                  <a role='button' href='#' class="text-white bg-orange-500 px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300 shadow-foxecom">
+                    Admin/Manager <i class="fa-solid fa-users ml-2"></i>
                   </a>
                 </div>
                 <p class="text-lg text-foxecom-gray">Manage referral forms and track submissions from your clients</p>
