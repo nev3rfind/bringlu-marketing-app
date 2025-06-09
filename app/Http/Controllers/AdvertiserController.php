@@ -181,28 +181,68 @@ class AdvertiserController extends Controller
      */
     public function storeReferralForm(Request $request)
     {
-        $request->validate([
-            'referral_details' => 'required|string',
-            'theme_type' => 'required|in:minimog,megamog,other',
-            'other_theme' => 'required_if:theme_type,other|string|max:255',
-            'purchase_email' => 'required|email|max:255',
-            'license_code' => 'required|string|max:255',
-            'shopify_store_url' => 'nullable|url|max:255'
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'referral_details' => 'required|string',
+                'theme_type' => 'required|in:minimog,megamog,other',
+                'other_theme' => 'required_if:theme_type,other|string|max:255',
+                'purchase_email' => 'required|email|max:255',
+                'license_code' => 'required|string|max:255',
+                'shopify_store_url' => 'nullable|url|max:255'
+            ]);
 
-        ReferralForm::create([
-            'user_id' => Auth::user()->id,
-            'referral_details' => $request->referral_details,
-            'theme_type' => $request->theme_type,
-            'other_theme' => $request->theme_type === 'other' ? $request->other_theme : null,
-            'purchase_email' => $request->purchase_email,
-            'license_code' => $request->license_code,
-            'shopify_store_url' => $request->shopify_store_url,
-            'status' => 'pending',
-            'viewed' => false
-        ]);
+            $referralForm = ReferralForm::create([
+                'user_id' => Auth::user()->id,
+                'referral_details' => $validatedData['referral_details'],
+                'theme_type' => $validatedData['theme_type'],
+                'other_theme' => $validatedData['theme_type'] === 'other' ? $validatedData['other_theme'] : null,
+                'purchase_email' => $validatedData['purchase_email'],
+                'license_code' => $validatedData['license_code'],
+                'shopify_store_url' => $validatedData['shopify_store_url'] ?? null,
+                'status' => 'pending',
+                'viewed' => false
+            ]);
 
-        return response()->json(['success' => true]);
+            // Return JSON response for AJAX requests
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Referral form submitted successfully!',
+                    'form_id' => $referralForm->id
+                ]);
+            }
+
+            // Fallback for non-AJAX requests
+            return redirect('/advertiser')->with('success-referral', 'Referral form submitted successfully');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Return validation errors as JSON for AJAX requests
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+
+            // Fallback for non-AJAX requests
+            return redirect()->back()->withErrors($e->errors())->withInput();
+
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Referral form submission error: ' . $e->getMessage());
+
+            // Return error response for AJAX requests
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred while submitting the form. Please try again.'
+                ], 500);
+            }
+
+            // Fallback for non-AJAX requests
+            return redirect()->back()->with('error', 'An error occurred while submitting the form. Please try again.');
+        }
     }
 
     /**

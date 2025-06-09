@@ -121,7 +121,7 @@
         <div id="referralModal" class="foxecom-modal hidden">
             <div class="foxecom-modal-content max-w-2xl">
                 <h3 class="text-lg font-medium text-foxecom-dark text-center mb-4">Submit Referral Form</h3>
-                <form id="referralForm" method="POST" action="{{ route('advertiser.referral.store') }}">
+                <form id="referralForm">
                     @csrf
                     
                     <!-- Referral Details Text Area -->
@@ -239,9 +239,11 @@
                         </button>
                         <button 
                             type="submit"
+                            id="submitReferralBtn"
                             class="foxecom-btn-primary"
                         >
-                            Submit Referral
+                            <span id="submitReferralText">Submit Referral</span>
+                            <i class="fas fa-spinner fa-spin ml-2 hidden" id="submitReferralSpinner"></i>
                         </button>
                     </div>
                 </form>
@@ -347,26 +349,52 @@
         document.getElementById('referralForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            const submitBtn = document.getElementById('submitReferralBtn');
+            const submitText = document.getElementById('submitReferralText');
+            const submitSpinner = document.getElementById('submitReferralSpinner');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitText.textContent = 'Submitting...';
+            submitSpinner.classList.remove('hidden');
+            
             const formData = new FormData(this);
             
-            fetch(this.action, {
+            fetch('{{ route("advertiser.referral.store") }}', {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitText.textContent = 'Submit Referral';
+                submitSpinner.classList.add('hidden');
+                
                 if (data.success) {
                     closeReferralModal();
                     document.getElementById('referralSuccessModal').classList.remove('hidden');
                 } else {
-                    alert('Error submitting form. Please try again.');
+                    alert(data.message || 'Error submitting form. Please try again.');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+                
+                // Reset button state
+                submitBtn.disabled = false;
+                submitText.textContent = 'Submit Referral';
+                submitSpinner.classList.add('hidden');
+                
                 alert('Error submitting form. Please try again.');
             });
         });
