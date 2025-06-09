@@ -61,20 +61,11 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
 
 // Advertiser customer routes
 Route::prefix('/advertiser')->middleware('auth', 'authorise-adv')->group(function() {
-    Route::get('', 'App\Http\Controllers\AdvertiserController@index');
-    // Advert details show with rate limiter (max 5 requests per minute)
-    Route::get('show/{advert}', 'App\Http\Controllers\AdvertiserController@show')
-    ->middleware(['throttle:advertShow'])->name('advert.show');
-    // Adverts activity route
-    Route::get('/activity', 'App\Http\Controllers\AdvertiserController@activity')->name('advert.activity');
-    // Advert advertising request route with rate limiter (max 2 requests per minute)
-    Route::post('/{advert}/request', 'App\Http\Controllers\AdvertiserController@request')
-    ->middleware(['throttle:advertRequests'])->name('advert.request');
-    // Advert details conversion to PDF route
-    Route::get('convert/{advert}', 'App\Http\Controllers\AdvertiserController@convertToPdf')->name('advert.topdf');
-
-    Route::post('/referral/store', 'App\Http\Controllers\AdvertiserController@storeReferralForm')->name('advertiser.referral.store');
-    Route::post('/referral/{form}/view', 'App\Http\Controllers\AdvertiserController@viewReferralForm')->name('advertiser.referral.view');
+    Route::get('', 'App\Http\Controllers\AdvertiserController@index')->name('advertiser.index');
+    
+    // Referral form routes - FIXED: Added proper POST route
+    Route::post('/referral/store', [AdvertiserController::class, 'storeReferralForm'])->name('advertiser.referral.store');
+    Route::post('/referral/{form}/view', [AdvertiserController::class, 'viewReferralForm'])->name('advertiser.referral.view');
 });
 
 // Account type redirection route to business OR advertiser controller

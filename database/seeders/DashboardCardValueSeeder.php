@@ -17,29 +17,44 @@ class DashboardCardValueSeeder extends Seeder
      */
     public function run()
     {
-        // Get all advertisers (account_type = 1)
-        $advertisers = User::where('account_type', 1)->get();
+        // Get all partners (account_type = 1)
+        $partners = User::where('account_type', 1)->get();
         $cards = DashboardCard::all();
 
-        foreach ($advertisers as $advertiser) {
+        foreach ($partners as $partner) {
             foreach ($cards as $card) {
-                // Create default active values for each card
-                $defaultValues = [
-                    'Earnings' => '$0.00',
-                    'Profit' => '$0.00',
-                    'Revenue' => '$0.00',
-                    'Pay Date' => 'Not Set',
-                    'Total' => '$0.00',
-                    'Status' => 'Active'
-                ];
+                // Create realistic values based on card type
+                $value = $this->generateRealisticValue($card->title, $partner);
 
                 DashboardCardValue::create([
-                    'user_id' => $advertiser->id,
+                    'user_id' => $partner->id,
                     'dashboard_card_id' => $card->id,
-                    'value' => $defaultValues[$card->title] ?? 'N/A',
+                    'value' => $value,
                     'is_active' => true
                 ]);
             }
+        }
+    }
+
+    private function generateRealisticValue($cardTitle, $partner)
+    {
+        switch ($cardTitle) {
+            case 'Earnings':
+                return '$' . number_format(rand(500, 5000), 2);
+            case 'Profit':
+                return '$' . number_format(rand(200, 2000), 2);
+            case 'Revenue':
+                return '$' . number_format(rand(1000, 8000), 2);
+            case 'Pay Date':
+                $dates = ['Jan 15, 2025', 'Feb 1, 2025', 'Feb 15, 2025', 'Mar 1, 2025'];
+                return $dates[array_rand($dates)];
+            case 'Total':
+                return '$' . number_format(rand(2000, 15000), 2);
+            case 'Status':
+                $statuses = ['Active', 'Pending Review', 'Verified', 'Premium'];
+                return $statuses[array_rand($statuses)];
+            default:
+                return 'N/A';
         }
     }
 }

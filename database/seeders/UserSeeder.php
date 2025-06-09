@@ -27,38 +27,161 @@ class UserSeeder extends Seeder
             'email' => 'admin@foxecom.com',
             'email_verified_at' => null,
             'password' => Hash::make('password123'),
+            'title' => 'Agency',
+            'company_name' => 'FoxEcom',
+            'company_website' => 'https://foxecom.com',
+            'paypal_email' => 'admin@foxecom.com',
+            'commission_structure' => json_encode(['megamog', 'minimog']),
+            'company_type_id' => 2, // Business customer (admin)
+            'account_type' => 2, // Business
             'remember_token' => null,
-            'account_type' => 1, // Advertiser
             'github_id' => null,
-            'company_type_id' => null, // NULL for account_type 1
         ]);
 
-        // Array of sample names for variety
-        $firstNames = [
-            'John', 'Jane', 'Michael', 'Sarah', 'David', 'Emily', 'Robert', 'Lisa', 'James', 'Maria'
-        ];
-        
-        $lastNames = [
-            'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'
+        // Sample user data
+        $users = [
+            [
+                'first_name' => 'John',
+                'last_name' => 'Smith',
+                'phone' => '+1234567890',
+                'email' => 'john.smith@example.com',
+                'title' => 'Solo developer',
+                'company_name' => 'Smith Development',
+                'company_website' => 'https://smithdev.com',
+                'paypal_email' => 'john.smith@paypal.com',
+                'commission_structure' => json_encode(['megamog']),
+                'company_type_id' => 1,
+                'account_type' => 1,
+            ],
+            [
+                'first_name' => 'Sarah',
+                'last_name' => 'Johnson',
+                'phone' => '+1234567891',
+                'email' => 'sarah.johnson@example.com',
+                'title' => 'Agency',
+                'company_name' => 'Johnson Digital Agency',
+                'company_website' => 'https://johnsondigital.com',
+                'paypal_email' => 'sarah.johnson@paypal.com',
+                'commission_structure' => json_encode(['minimog']),
+                'company_type_id' => 1,
+                'account_type' => 1,
+            ],
+            [
+                'first_name' => 'Michael',
+                'last_name' => 'Brown',
+                'phone' => '+1234567892',
+                'email' => 'michael.brown@example.com',
+                'title' => 'Merchants or store owners',
+                'company_name' => 'Brown E-commerce',
+                'company_website' => 'https://brownecommerce.com',
+                'paypal_email' => 'michael.brown@paypal.com',
+                'commission_structure' => json_encode(['megamog', 'minimog']),
+                'company_type_id' => 1,
+                'account_type' => 1,
+            ],
+            [
+                'first_name' => 'Emily',
+                'last_name' => 'Davis',
+                'phone' => '+1234567893',
+                'email' => 'emily.davis@example.com',
+                'title' => 'Solo developer',
+                'company_name' => 'Davis Web Solutions',
+                'company_website' => 'https://davisweb.com',
+                'paypal_email' => 'emily.davis@paypal.com',
+                'commission_structure' => json_encode(['minimog']),
+                'company_type_id' => 1,
+                'account_type' => 1,
+            ],
+            [
+                'first_name' => 'David',
+                'last_name' => 'Wilson',
+                'phone' => '+1234567894',
+                'email' => 'david.wilson@example.com',
+                'title' => 'Agency',
+                'company_name' => 'Wilson Creative Agency',
+                'company_website' => 'https://wilsoncreative.com',
+                'paypal_email' => 'david.wilson@paypal.com',
+                'commission_structure' => json_encode(['megamog']),
+                'company_type_id' => 1,
+                'account_type' => 1,
+            ],
+            [
+                'first_name' => 'Lisa',
+                'last_name' => 'Miller',
+                'phone' => '+1234567895',
+                'email' => 'lisa.miller@example.com',
+                'title' => 'Freelancer',
+                'other_title' => 'Freelance Web Designer',
+                'company_name' => 'Miller Design Studio',
+                'company_website' => 'https://millerdesign.com',
+                'paypal_email' => 'lisa.miller@paypal.com',
+                'commission_structure' => json_encode(['minimog']),
+                'company_type_id' => 1,
+                'account_type' => 1,
+            ],
+            [
+                'first_name' => 'Robert',
+                'last_name' => 'Garcia',
+                'phone' => '+1234567896',
+                'email' => 'robert.garcia@example.com',
+                'title' => 'Merchants or store owners',
+                'company_name' => 'Garcia Online Store',
+                'company_website' => 'https://garciastore.com',
+                'paypal_email' => 'robert.garcia@paypal.com',
+                'commission_structure' => json_encode(['megamog', 'minimog']),
+                'company_type_id' => 1,
+                'account_type' => 1,
+            ],
+            [
+                'first_name' => 'Jennifer',
+                'last_name' => 'Martinez',
+                'phone' => '+1234567897',
+                'email' => 'jennifer.martinez@example.com',
+                'title' => 'Agency',
+                'company_name' => 'Martinez Digital',
+                'company_website' => 'https://martinezdigital.com',
+                'paypal_email' => 'jennifer.martinez@paypal.com',
+                'commission_structure' => json_encode(['megamog']),
+                'company_type_id' => 1,
+                'account_type' => 1,
+            ],
+            [
+                'first_name' => 'James',
+                'last_name' => 'Anderson',
+                'phone' => '+1234567898',
+                'email' => 'james.anderson@example.com',
+                'title' => 'Solo developer',
+                'company_name' => 'Anderson Tech',
+                'company_website' => 'https://andersontech.com',
+                'paypal_email' => 'james.anderson@paypal.com',
+                'commission_structure' => json_encode(['minimog']),
+                'company_type_id' => 1,
+                'account_type' => 1,
+            ],
+            [
+                'first_name' => 'Maria',
+                'last_name' => 'Rodriguez',
+                'phone' => '+1234567899',
+                'email' => 'maria.rodriguez@example.com',
+                'title' => 'Consultant',
+                'other_title' => 'E-commerce Consultant',
+                'company_name' => 'Rodriguez Consulting',
+                'company_website' => 'https://rodriguezconsulting.com',
+                'paypal_email' => 'maria.rodriguez@paypal.com',
+                'commission_structure' => json_encode(['megamog', 'minimog']),
+                'company_type_id' => 1,
+                'account_type' => 1,
+            ],
         ];
 
-        // Create 9 additional users with account_type 2 (Business)
-        for ($i = 1; $i <= 9; $i++) {
-            $firstName = $firstNames[array_rand($firstNames)];
-            $lastName = $lastNames[array_rand($lastNames)];
-            
-            User::create([
-                'first_name' => $firstName,
-                'last_name' => $lastName,
-                'phone' => '+1' . rand(2000000000, 9999999999), // Random US phone number
-                'email' => strtolower($firstName . '.' . $lastName . $i . '@foxecom.com'),
+        // Create users with password123
+        foreach ($users as $userData) {
+            User::create(array_merge($userData, [
                 'email_verified_at' => null,
                 'password' => Hash::make('password123'),
                 'remember_token' => null,
-                'account_type' => 2, // Business
                 'github_id' => null,
-                'company_type_id' => rand(1, 2), // Randomly 1 or 2
-            ]);
+            ]));
         }
     }
 }

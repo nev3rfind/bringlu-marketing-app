@@ -21,9 +21,17 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('title')->nullable(); // Solo developer, Agency, etc.
+            $table->string('company_name')->nullable();
+            $table->string('company_website')->nullable();
+            $table->string('paypal_email')->nullable();
+            $table->json('commission_structure')->nullable(); // Store selected themes
+            $table->text('other_title')->nullable(); // For "Other" option
+            $table->integer('company_type_id')->nullable()->unsigned(); // 1=Partner, 2=Customer
+            $table->unsignedBigInteger('account_type')->default(1); // All users are partners now
+            $table->string('github_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
-            $table->unsignedBigInteger('account_type');
         });
     }
 
