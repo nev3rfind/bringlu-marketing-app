@@ -35,12 +35,8 @@ class RegisteredUserController extends Controller
      // Redirect user to the page based on the account type after registration
     public static function checkUser(User $user)
     {
-        $redirect = '/business';
-        if ($user->account_type === 1)
-        {
-            $redirect = '/advertiser';
-        }
-
+        // All users are now partners (account_type = 1) since we removed the business/advertiser distinction
+        $redirect = '/advertiser';
         return redirect($redirect);
     }
 
@@ -50,19 +46,21 @@ class RegisteredUserController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string'],
+            'other_title' => ['nullable', 'string', 'max:255'],
+            'company_name' => ['required', 'string', 'max:255'],
+            'company_website' => ['required', 'url', 'max:255'],
+            'paypal_email' => ['required', 'email', 'max:255'],
+            'commission_structure' => ['required', 'array', 'min:1'],
+            'commission_structure.*' => ['string', 'in:megamog,minimog'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        if($request->account_type == 2)
-        {
-            $company_type_id = 1;
-            $account_type = 2;
-        } else if($request->account_type == 3) {
-            $company_type_id = 2;
-            $account_type = 2;
-        } else {
-            $company_type_id = null;
-            $account_type = 1;
+        // Handle the "Other" title option
+        $title = $request->title;
+        if ($title === 'Other' && $request->other_title) {
+            $title = $request->other_title;
         }
 
         $user = User::create([
@@ -70,9 +68,14 @@ class RegisteredUserController extends Controller
             'last_name' => $request->last_name,
             'phone' => $request->phone,
             'email' => $request->email,
-            'account_type' =>  $account_type,
+            'title' => $title,
+            'other_title' => $request->title === 'Other' ? $request->other_title : null,
+            'company_name' => $request->company_name,
+            'company_website' => $request->company_website,
+            'paypal_email' => $request->paypal_email,
+            'commission_structure' => json_encode($request->commission_structure),
+            'account_type' => 1, // All users are partners now
             'password' => Hash::make($request->password),
-            'company_type_id' => $company_type_id
         ]);
 
         event(new Registered($user));
