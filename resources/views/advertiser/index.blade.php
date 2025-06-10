@@ -121,9 +121,8 @@
         <div id="referralModal" class="foxecom-modal hidden">
             <div class="foxecom-modal-content max-w-2xl">
                 <h3 class="text-lg font-medium text-foxecom-dark text-center mb-4">Submit Referral Form</h3>
-                <form id="referralForm">
-                    @csrf
-                    
+                <form method="POST" action="{{ route('advertiser.referral.store') }}" id="referralForm">
+                    @csrf   
                     <!-- Referral Details Text Area -->
                     <div class="mb-6">
                         <label for="referral_details" class="block text-sm font-medium text-foxecom-dark mb-2">
@@ -357,15 +356,18 @@
             submitBtn.disabled = true;
             submitText.textContent = 'Submitting...';
             submitSpinner.classList.remove('hidden');
+
+            console.log('Submitted form:',this);
             
             const formData = new FormData(this);
+
+            console.log('Form data:',formData);
             
             fetch('{{ route("advertiser.referral.store") }}', {
-                method: 'POST',
+                method: this.action,
                 body: formData,
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
             .then(response => {

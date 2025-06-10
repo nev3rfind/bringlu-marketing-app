@@ -27,7 +27,7 @@ class AuthoriseAdvertiser
             if(Auth::user()->account_type === 1) {
                 return $next($request);
             } else {
-                return redirect('/business')->with('not-advertiser-alert', 'You are not advertiser customer');;;
+                return redirect('/business')->with('not-advertiser-alert', 'You are not advertiser customer');
             }
         } else {
             return redirect('login')->with('message', 'Login first to access this page');

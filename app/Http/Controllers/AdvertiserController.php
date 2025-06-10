@@ -31,19 +31,7 @@ class AdvertiserController extends Controller
     }
     
     private function getDashboardData()
-    {
-        // Pending requests count
-        $requestsCount['pending'] = AdvertStatus::where('advertiser_id', Auth::user()->id)
-        ->where('advert_status', 'pending')->count();
-        // Confirmed requests count
-        $requestsCount['confirmed'] = AdvertStatus::where('advertiser_id', Auth::user()->id)
-        ->where('advert_status', 'confirmed')->count();
-        // Rejected requests count
-        $requestsCount['rejected'] = AdvertStatus::where('advertiser_id', Auth::user()->id)
-        ->where('advert_status', 'rejected')->count();
-        // Total requests count
-        $requestsCount['all'] = AdvertStatus::where('advertiser_id', Auth::user()->id)->count();
-        
+    { 
         // Get dashboard cards for this user
         $dashboardCards = DashboardCard::where('is_active', true)
             ->orderBy('position')
@@ -68,8 +56,6 @@ class AdvertiserController extends Controller
         ];
 
         return [
-            'adverts' => Advert::get(), 
-            'requestsCount' => $requestsCount,
             'dashboardCards' => $dashboardCards,
             'referralForms' => $referralForms,
             'referralStats' => $referralStats
