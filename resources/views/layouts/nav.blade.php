@@ -19,6 +19,12 @@
                                 Manage clients
                             </button>
                         </a>
+                        
+                        <a href="{{ route('business.reports') }}">
+                            <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-7 py-3 uppercase shadow-foxecom">
+                                Reports
+                            </button>
+                        </a>
                     @endif
                     
                     <form method="POST" action="{{ route('logout') }}">

@@ -43,6 +43,11 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
     Route::get('/business/ads/active', 'App\Http\Controllers\BusinessController@showActive')->name('adverts.active');
     Route::get('/business/ads/all', 'App\Http\Controllers\BusinessController@showAll')->name('adverts.all');
     
+    // Reports page
+    Route::get('/business/reports', function () {
+        return view('business.reports');
+    })->name('business.reports');
+    
     // Client management routes
     Route::get('/business/clients/all', 'App\Http\Controllers\ClientController@showAll')->name('clients.all');
     Route::get('/business/clients/{client}/dashboard', 'App\Http\Controllers\ClientController@dashboard')->name('clients.dashboard');

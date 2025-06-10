@@ -42,6 +42,17 @@
                       <div class="text-2xl font-bold text-foxecom-orange mb-2">
                           {{ $card->current_value }}
                       </div>
+                      @php
+                          $latestValue = \App\Models\DashboardCardValue::where('user_id', auth()->user()->id)
+                              ->where('dashboard_card_id', $card->id)
+                              ->where('is_active', true)
+                              ->first();
+                      @endphp
+                      @if($latestValue)
+                          <p class="text-xs text-gray-500">
+                              Last updated: {{ \Carbon\Carbon::parse($latestValue->updated_at)->diffForHumans() }}
+                          </p>
+                      @endif
                   </div>
                   @endforeach
               </div>
@@ -430,7 +441,11 @@
                             ${form.shopify_store_url ? `
                             <div class="md:col-span-2">
                                 <label class="block text-sm font-medium text-foxecom-dark">Shopify Store URL</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.shopify_store_url}</p>
+                                <p class="mt-1 text-sm text-gray-900">
+                                    <a href="${form.shopify_store_url}" target="_blank" class="text-foxecom-orange hover:text-orange-600 underline">
+                                        ${form.shopify_store_url}
+                                    </a>
+                                </p>
                             </div>
                             ` : ''}
                             ${form.proof_file_path ? `

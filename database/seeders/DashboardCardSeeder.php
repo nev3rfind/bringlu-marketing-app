@@ -15,13 +15,16 @@ class DashboardCardSeeder extends Seeder
      */
     public function run()
     {
+        // Clear existing cards
+        DashboardCard::truncate();
+        
         $cards = [
-            ['title' => 'Earnings', 'description' => 'Total earnings for this client', 'position' => 1],
-            ['title' => 'Profit', 'description' => 'Net profit generated', 'position' => 2],
-            ['title' => 'Revenue', 'description' => 'Total revenue generated', 'position' => 3],
-            ['title' => 'Pay Date', 'description' => 'Next payment date', 'position' => 4],
-            ['title' => 'Total', 'description' => 'Total amount accumulated', 'position' => 5],
-            ['title' => 'Status', 'description' => 'Current account status', 'position' => 6],
+            ['title' => 'Referral', 'description' => 'Total referrals made', 'position' => 1],
+            ['title' => 'Commission Earned', 'description' => 'Total commission earned', 'position' => 2],
+            ['title' => 'Date of Payout', 'description' => 'Next payout date', 'position' => 3],
+            ['title' => 'N/A', 'description' => 'Not set', 'position' => 4],
+            ['title' => 'N/A', 'description' => 'Not set', 'position' => 5],
+            ['title' => 'N/A', 'description' => 'Not set', 'position' => 6],
         ];
 
         foreach ($cards as $card) {
