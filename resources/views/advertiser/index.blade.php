@@ -421,7 +421,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-foxecom-dark">Theme Type</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.theme_type_text}</p>
+                                <p class="mt-1 text-sm text-gray-900">${form.theme_type}</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-foxecom-dark">Purchase Email</label>

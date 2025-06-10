@@ -163,7 +163,7 @@
 }
 
 .foxecom-modal-content {
-    @apply relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 border w-full max-w-lg shadow-xl rounded-xl bg-white;
+    @apply relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 border w-full max-w-2xl shadow-xl rounded-xl bg-white;
 }
 
 /* Button Styles */
