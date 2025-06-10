@@ -43,17 +43,11 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string'],
             'other_title' => ['nullable', 'string', 'max:255'],
-            'company_name' => ['required', 'string', 'max:255'],
-            'company_website' => ['required', 'url', 'max:255'],
-            'paypal_email' => ['required', 'email', 'max:255'],
-            'commission_structure_id' => ['required', 'integer', 'in:1,2,3,4,5'],
-            'company_type_id' => ['required', 'integer', 'in:1,2'],
+            'company_website' => ['required', 'string', 'max:255'],
             'terms_agreement' => ['required', 'accepted'],
             'understand_checkbox' => ['required', 'accepted'],
             'payment_policy' => ['required', 'accepted'],
@@ -68,17 +62,11 @@ class RegisteredUserController extends Controller
         }
 
         $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone' => $request->phone,
+            'name' => $request->name,
             'email' => $request->email,
             'title' => $title,
             'other_title' => $request->title === 'Other' ? $request->other_title : null,
-            'company_name' => $request->company_name,
             'company_website' => $request->company_website,
-            'paypal_email' => $request->paypal_email,
-            'commission_structure_id' => $request->commission_structure_id,
-            'company_type_id' => $request->company_type_id,
             'account_type' => 1, // All users are partners now
             'password' => Hash::make($request->password),
         ]);

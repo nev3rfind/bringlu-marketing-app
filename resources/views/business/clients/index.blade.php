@@ -15,8 +15,6 @@
                             <th scope="col" class="py-3 px-6 text-left">Name</th>
                             <th scope="col" class="py-3 px-6 text-left">Title</th>
                             <th scope="col" class="py-3 px-6 text-left">Company Website</th>
-                            <th scope="col" class="py-3 px-6 text-left">PayPal Email</th>
-                            <th scope="col" class="py-3 px-6 text-left">Company Type</th>
                             <th scope="col" class="py-3 px-6 text-center">Register Date</th>
                             <th scope="col" class="py-3 px-6 text-center">Actions</th>
                         </tr>
@@ -25,25 +23,19 @@
                         @foreach($clients as $client)
                         <tr class="bg-white border-b hover:bg-gray-50">
                             <td class="py-4 px-6">{{ $client->email }}</td>
-                            <td class="py-4 px-6">{{ $client->first_name }} {{ $client->last_name }}</td>
+                            <td class="py-4 px-6">{{ $client->display_name }}</td>
                             <td class="py-4 px-6">
-                                <span class="text-sm">{{ $client->title ?? 'Not specified' }}</span>
+                                <span class="text-sm">{{ $client->title_text }}</span>
                             </td>
                             <td class="py-4 px-6">
-                                @if($client->company_website)
+                                @if($client->company_website && $client->company_website !== 'N/A')
                                     <a href="{{ $client->company_website }}" target="_blank" 
                                        class="text-foxecom-orange hover:text-orange-600 underline">
                                         {{ $client->company_website }}
                                     </a>
                                 @else
-                                    <span class="text-gray-400">Not provided</span>
+                                    <span class="text-gray-400">N/A</span>
                                 @endif
-                            </td>
-                            <td class="py-4 px-6">{{ $client->paypal_email ?? 'Not provided' }}</td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $client->company_type_id == 1 ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
-                                    {{ $client->company_type_text }}
-                                </span>
                             </td>
                             <td class="py-4 px-6 text-center">
                                 {{ \Carbon\Carbon::parse($client->created_at)->format('Y-m-d') }}

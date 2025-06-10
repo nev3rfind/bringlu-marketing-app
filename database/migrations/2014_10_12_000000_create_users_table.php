@@ -15,19 +15,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('phone');
+            $table->string('name'); // Single name field
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('title')->nullable(); // Solo developer, Agency, etc.
-            $table->string('company_name')->nullable();
-            $table->string('company_website')->nullable();
-            $table->string('paypal_email')->nullable();
-            $table->integer('commission_structure_id')->nullable(); // 1=Minimog, 2=Megamog, 3=Zest, 4=Sleek, 5=Hyper
+            $table->string('title'); // Solo developer, Agency, etc.
             $table->text('other_title')->nullable(); // For "Other" option
-            $table->integer('company_type_id')->nullable()->unsigned(); // 1=Partner, 2=Customer
+            $table->string('company_website'); // Company website or N/A
             $table->unsignedBigInteger('account_type')->default(1); // All users are partners now
             $table->string('github_id')->nullable();
             $table->rememberToken();

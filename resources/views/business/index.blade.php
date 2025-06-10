@@ -5,7 +5,7 @@
           <!-- Greeting Card -->
           <div class="col-span-8 p-6 foxecom-card-premium">
             <div class="p-2">
-                <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">Hello {{ auth()->user()->first_name }} {{ auth()->user()->last_name }},</h2>
+                <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">Hello {{ auth()->user()->display_name }},</h2>
                 <div class="my-4">
                   <a role='button' href='#' class="text-white bg-orange-500 px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300 shadow-foxecom">
                     Admin/Manager <i class="fa-solid fa-users ml-2"></i>
@@ -50,10 +50,10 @@
                           </thead>
                           <tbody>
                               @forelse($referralForms as $form)
-                              <tr class="border-b cursor-pointer hover:bg-gray-50 {{ !$form->viewed ? 'unviewed-row' : 'bg-white' }}" 
+                              <tr class="{{ !$form->viewed ? 'unviewed-row' : 'bg-white' }} border-b hover:bg-gray-50" 
                                   onclick="viewReferralForm({{ $form->id }})">
                                   <td class="py-4 px-6 font-medium">#{{ $form->id }}</td>
-                                  <td class="py-4 px-6">{{ $form->user->first_name }} {{ $form->user->last_name }}</td>
+                                  <td class="py-4 px-6">{{ $form->user->display_name }}</td>
                                   <td class="py-4 px-6">{{ $form->theme_type_text }}</td>
                                   <td class="py-4 px-6">{{ $form->purchase_email }}</td>
                                   <td class="py-4 px-6">{{ $form->license_code ?: 'N/A' }}</td>
@@ -195,7 +195,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-foxecom-dark">Submitted By</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.user.first_name} ${form.user.last_name}</p>
+                                <p class="mt-1 text-sm text-gray-900">${form.user.name}</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-foxecom-dark">Theme Type</label>

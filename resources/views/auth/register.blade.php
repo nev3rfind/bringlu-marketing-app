@@ -26,89 +26,33 @@
                 <form method="POST" action="{{ route('register') }}" class="space-y-6" id="registerForm">
                     @csrf
 
-                    <!-- Personal Information -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- First Name -->
-                        <div>
-                            <label for="first_name" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                First name *
-                            </label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-user text-foxecom-gray"></i>
-                                </div>
-                                <input id="first_name" name="first_name" type="text" required 
-                                       class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
-                                       placeholder="John" value="{{ old('first_name') }}">
-                            </div>
-                            @error('first_name')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Last Name -->
-                        <div>
-                            <label for="last_name" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                Last name *
-                            </label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-user text-foxecom-gray"></i>
-                                </div>
-                                <input id="last_name" name="last_name" type="text" required 
-                                       class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
-                                       placeholder="Doe" value="{{ old('last_name') }}">
-                            </div>
-                            @error('last_name')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Email Address -->
+                    <!-- Your Name -->
                     <div>
-                        <label for="email" class="block text-sm font-medium text-foxecom-dark mb-2">
-                            E-mail address *
+                        <label for="name" class="block text-sm font-medium text-foxecom-dark mb-2">
+                            Your name (How we should call you?) *
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-envelope text-foxecom-gray"></i>
+                                <i class="fas fa-user text-foxecom-gray"></i>
                             </div>
-                            <input id="email" name="email" type="email" required 
+                            <input id="name" name="name" type="text" required 
                                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
-                                   placeholder="you@example.com" value="{{ old('email') }}">
+                                   placeholder="John Doe" value="{{ old('name') }}">
                         </div>
-                        @error('email')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Phone number -->
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-foxecom-dark mb-2">
-                            Phone number *
-                        </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-phone text-foxecom-gray"></i>
-                            </div>
-                            <input id="phone" name="phone" type="tel" required 
-                                   class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
-                                   placeholder="+1 (555) 123-4567" value="{{ old('phone') }}">
-                        </div>
-                        @error('phone')
+                        @error('name')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Title/Role -->
                     <div>
-                        <label class="block text-sm font-medium text-foxecom-dark mb-3">Which title describe you the best? *</label>
+                        <label class="block text-sm font-medium text-foxecom-dark mb-3">Which title describe your title the best? *</label>
                         <div class="space-y-3">
                             <div class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
                                 <input id="solo_developer" type="radio" value="Solo developer" name="title" 
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
-                                       {{ old('title') == 'Solo developer' ? 'checked' : '' }}>
+                                       {{ old('title') == 'Solo developer' ? 'checked' : '' }}
+                                       onchange="toggleOtherInput()">
                                 <label for="solo_developer" class="ml-3 text-sm font-medium text-foxecom-dark">
                                     Solo developer
                                 </label>
@@ -116,17 +60,19 @@
                             <div class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
                                 <input id="agency" type="radio" value="Agency" name="title" 
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
-                                       {{ old('title') == 'Agency' ? 'checked' : '' }}>
+                                       {{ old('title') == 'Agency' ? 'checked' : '' }}
+                                       onchange="toggleOtherInput()">
                                 <label for="agency" class="ml-3 text-sm font-medium text-foxecom-dark">
                                     Agency
                                 </label>
                             </div>
                             <div class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                <input id="merchants" type="radio" value="Merchants or store owners" name="title" 
+                                <input id="merchants" type="radio" value="Merchants/Store owners" name="title" 
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
-                                       {{ old('title') == 'Merchants or store owners' ? 'checked' : '' }}>
+                                       {{ old('title') == 'Merchants/Store owners' ? 'checked' : '' }}
+                                       onchange="toggleOtherInput()">
                                 <label for="merchants" class="ml-3 text-sm font-medium text-foxecom-dark">
-                                    Merchants or store owners
+                                    Merchants/Store owners
                                 </label>
                             </div>
                             <div class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
@@ -148,166 +94,75 @@
                         @enderror
                     </div>
 
-                    <!-- Company Information -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Company Name -->
-                        <div>
-                            <label for="company_name" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                Company name *
-                            </label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-building text-foxecom-gray"></i>
-                                </div>
-                                <input id="company_name" name="company_name" type="text" required 
-                                       class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
-                                       placeholder="Your Company Ltd" value="{{ old('company_name') }}">
+                    <!-- Company Website -->
+                    <div>
+                        <label for="company_website" class="block text-sm font-medium text-foxecom-dark mb-2">
+                            Your company website *
+                        </label>
+                        <p class="text-xs text-gray-500 mb-2">(If not applicable, type N/A)</p>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-globe text-foxecom-gray"></i>
                             </div>
-                            @error('company_name')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <input id="company_website" name="company_website" type="text" required 
+                                   class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
+                                   placeholder="https://yourcompany.com or N/A" value="{{ old('company_website') }}">
                         </div>
-
-                        <!-- Company Website -->
-                        <div>
-                            <label for="company_website" class="block text-sm font-medium text-foxecom-dark mb-2">
-                                Company website *
-                            </label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-globe text-foxecom-gray"></i>
-                                </div>
-                                <input id="company_website" name="company_website" type="url" required 
-                                       class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
-                                       placeholder="https://yourcompany.com" value="{{ old('company_website') }}">
-                            </div>
-                            @error('company_website')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        @error('company_website')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <!-- PayPal Email -->
+                    <!-- Contact Email -->
                     <div>
-                        <label for="paypal_email" class="block text-sm font-medium text-foxecom-dark mb-2">
-                            PayPal email *
+                        <label for="email" class="block text-sm font-medium text-foxecom-dark mb-2">
+                            Your contact email *
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fab fa-paypal text-foxecom-gray"></i>
+                                <i class="fas fa-envelope text-foxecom-gray"></i>
                             </div>
-                            <input id="paypal_email" name="paypal_email" type="email" required 
+                            <input id="email" name="email" type="email" required 
                                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
-                                   placeholder="paypal@example.com" value="{{ old('paypal_email') }}">
+                                   placeholder="you@example.com" value="{{ old('email') }}">
                         </div>
-                        @error('paypal_email')
+                        @error('email')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Commission Structure -->
+                    <!-- Password -->
                     <div>
-                        <label class="block text-sm font-medium text-foxecom-dark mb-3">Commission Structure *</label>
-                        <p class="text-sm text-foxecom-gray mb-4">Select the theme you're most interested in promoting:</p>
-                        
-                        <div class="space-y-4">
-                            <!-- Minimog Theme -->
-                            <div class="flex items-start p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                <input id="minimog" type="radio" value="1" name="commission_structure_id" 
-                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1"
-                                       {{ old('commission_structure_id') == '1' ? 'checked' : '' }}>
-                                <div class="ml-3 flex-1">
-                                    <label for="minimog" class="text-sm font-medium text-foxecom-dark">
-                                        Commission Structure for <a href="https://foxecom.com/products/minimog-shopify-theme" target="_blank" class="text-foxecom-orange hover:text-orange-600 underline">Minimog theme</a>
-                                    </label>
-                                    <div class="mt-2">
-                                        <img src="{{ asset('images/minimog_theme.png') }}" alt="Minimog Theme" 
-                                             class="w-full max-w-md rounded-lg shadow-sm">
-                                    </div>
-                                </div>
+                        <label for="password" class="block text-sm font-medium text-foxecom-dark mb-2">
+                            Your account password *
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-foxecom-gray"></i>
                             </div>
-
-                            <!-- Megamog Theme -->
-                            <div class="flex items-start p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                <input id="megamog" type="radio" value="2" name="commission_structure_id" 
-                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1"
-                                       {{ old('commission_structure_id') == '2' ? 'checked' : '' }}>
-                                <div class="ml-3 flex-1">
-                                    <label for="megamog" class="text-sm font-medium text-foxecom-dark">
-                                        Commission Structure for <a href="https://foxecom.com/products/megamog-shopify-theme" target="_blank" class="text-foxecom-orange hover:text-orange-600 underline">Megamog theme</a>
-                                    </label>
-                                    <div class="mt-2">
-                                        <img src="{{ asset('images/megamog_theme.png') }}" alt="Megamog Theme" 
-                                             class="w-full max-w-md rounded-lg shadow-sm">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Zest Theme -->
-                            <div class="flex items-start p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                <input id="zest" type="radio" value="3" name="commission_structure_id" 
-                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1"
-                                       {{ old('commission_structure_id') == '3' ? 'checked' : '' }}>
-                                <div class="ml-3 flex-1">
-                                    <label for="zest" class="text-sm font-medium text-foxecom-dark">
-                                        Commission Structure for Zest theme
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Sleek Theme -->
-                            <div class="flex items-start p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                <input id="sleek" type="radio" value="4" name="commission_structure_id" 
-                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1"
-                                       {{ old('commission_structure_id') == '4' ? 'checked' : '' }}>
-                                <div class="ml-3 flex-1">
-                                    <label for="sleek" class="text-sm font-medium text-foxecom-dark">
-                                        Commission Structure for Sleek theme
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Hyper Theme -->
-                            <div class="flex items-start p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                <input id="hyper" type="radio" value="5" name="commission_structure_id" 
-                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1"
-                                       {{ old('commission_structure_id') == '5' ? 'checked' : '' }}>
-                                <div class="ml-3 flex-1">
-                                    <label for="hyper" class="text-sm font-medium text-foxecom-dark">
-                                        Commission Structure for Hyper theme
-                                    </label>
-                                </div>
-                            </div>
+                            <input id="password" name="password" type="password" required 
+                                   class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
+                                   placeholder="Minimum 6 characters">
                         </div>
-                        @error('commission_structure_id')
+                        @error('password')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Company Type Selection -->
+                    <!-- Confirm Password -->
                     <div>
-                        <label class="block text-sm font-medium text-foxecom-dark mb-3">Company Type *</label>
-                        <div class="space-y-3">
-                            <div class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                <input id="foxecom_partner" type="radio" value="1" name="company_type_id" 
-                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
-                                       {{ old('company_type_id') == '1' ? 'checked' : '' }} required>
-                                <label for="foxecom_partner" class="ml-3 text-sm font-medium text-foxecom-dark">
-                                    <i class="fas fa-handshake text-foxecom-orange mr-2"></i>
-                                    FoxEcom Partner
-                                </label>
+                        <label for="password_confirmation" class="block text-sm font-medium text-foxecom-dark mb-2">
+                            Confirm Password *
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-foxecom-gray"></i>
                             </div>
-                            <div class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                <input id="foxecom_customer" type="radio" value="2" name="company_type_id" 
-                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
-                                       {{ old('company_type_id') == '2' ? 'checked' : '' }} required>
-                                <label for="foxecom_customer" class="ml-3 text-sm font-medium text-foxecom-dark">
-                                    <i class="fas fa-user-circle text-foxecom-orange mr-2"></i>
-                                    FoxEcom Customer
-                                </label>
-                            </div>
+                            <input id="password_confirmation" name="password_confirmation" type="password" required 
+                                   class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
+                                   placeholder="Confirm your password">
                         </div>
-                        @error('company_type_id')
+                        @error('password_confirmation')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -405,42 +260,6 @@
                                 the official Affiliate Program
                             </a> by FoxEcom today
                         </p>
-                    </div>
-
-                    <!-- Password -->
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-foxecom-dark mb-2">
-                            Password *
-                        </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-foxecom-gray"></i>
-                            </div>
-                            <input id="password" name="password" type="password" required 
-                                   class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
-                                   placeholder="Minimum 6 characters">
-                        </div>
-                        @error('password')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Confirm Password -->
-                    <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-foxecom-dark mb-2">
-                            Confirm Password *
-                        </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-foxecom-gray"></i>
-                            </div>
-                            <input id="password_confirmation" name="password_confirmation" type="password" required 
-                                   class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-foxecom-orange focus:border-transparent"
-                                   placeholder="Confirm your password">
-                        </div>
-                        @error('password_confirmation')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <!-- Submit Button -->

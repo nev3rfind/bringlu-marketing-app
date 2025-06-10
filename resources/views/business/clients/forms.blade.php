@@ -2,7 +2,7 @@
 @section('content')
 <div class="mt-8 text-center">
     <h1 class="font-medium leading-tight text-4xl mt-0 mb-2 text-foxecom-dark">
-        Referral Forms for {{ $client->first_name }} {{ $client->last_name }}
+        Referral Forms for {{ $client->display_name }}
     </h1>
     <p class="text-foxecom-gray">Review and manage client referral form submissions</p>
 </div>
@@ -182,7 +182,7 @@ function viewClientReferralForm(formId) {
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-foxecom-dark">Submitted By</label>
-                        <p class="mt-1 text-sm text-gray-900">${form.user.first_name} ${form.user.last_name}</p>
+                        <p class="mt-1 text-sm text-gray-900">${form.user.name}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-foxecom-dark">Theme Type</label>

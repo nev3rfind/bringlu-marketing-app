@@ -19,21 +19,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'phone',
-        'account_type',
+        'name',
         'email',
         'password',
         'account_type',
-        'created_date',
         'title',
-        'company_name',
-        'company_website',
-        'paypal_email',
-        'commission_structure_id',
         'other_title',
-        'company_type_id'
+        'company_website'
     ];
 
     /**
@@ -53,7 +45,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'created_date' => 'datetime',
     ];
 
     // User can have many adverts
@@ -64,36 +55,41 @@ class User extends Authenticatable
     // User (advert creator) is linked with advert status
     public function advertStatus() {
         return $this->belongsTo(AdvertStatus::class);
-      }
-
-    /**
-     * Get the commission structure theme as a formatted string
-     */
-    public function getCommissionStructureTextAttribute()
-    {
-        $themes = [
-            1 => 'Minimog Theme',
-            2 => 'Megamog Theme', 
-            3 => 'Zest Theme',
-            4 => 'Sleek Theme',
-            5 => 'Hyper Theme'
-        ];
-        
-        return $themes[$this->commission_structure_id] ?? 'None selected';
     }
 
     /**
-     * Get the company type as a formatted string
+     * Get the display name for the user
      */
-    public function getCompanyTypeTextAttribute()
+    public function getDisplayNameAttribute()
     {
-        switch ($this->company_type_id) {
-            case 1:
-                return 'FoxEcom Partner';
-            case 2:
-                return 'FoxEcom Customer';
-            default:
-                return 'Not specified';
+        return $this->name;
+    }
+
+    /**
+     * Get the first name from the full name
+     */
+    public function getFirstNameAttribute()
+    {
+        return explode(' ', $this->name)[0];
+    }
+
+    /**
+     * Get the last name from the full name
+     */
+    public function getLastNameAttribute()
+    {
+        $nameParts = explode(' ', $this->name);
+        return count($nameParts) > 1 ? end($nameParts) : '';
+    }
+
+    /**
+     * Get the title text with other title if applicable
+     */
+    public function getTitleTextAttribute()
+    {
+        if ($this->title === 'Other' && $this->other_title) {
+            return $this->other_title;
         }
+        return $this->title;
     }
 }

@@ -5,14 +5,10 @@
           <!-- Greeting Card -->
           <div class="col-span-8 p-6 foxecom-card-premium">
             <div class="p-2">
-                <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">Hello {{ auth()->user()->first_name }} {{ auth()->user()->last_name }},</h2>
+                <h2 class="font-bold text-3xl mb-2 text-foxecom-dark">Hello {{ auth()->user()->display_name }},</h2>
                 <div class="my-4">
                   <a role='button' href='#' class="text-white bg-foxecom-orange px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-300 shadow-foxecom">
-                    @if (auth()->user()->company_type_id == 1)
-                        FoxEcom Partner <i class="fa-solid fa-user ml-2"></i>
-                    @else 
-                        FoxEcom Customer <i class="fa-solid fa-user-circle ml-2"></i> 
-                    @endif       
+                    FoxEcom Partner <i class="fa-solid fa-user ml-2"></i>
                   </a>
                 </div>
                 <p class="text-lg text-foxecom-gray">Here you can submit your referral forms, see their progress and review your dashboard.</p>

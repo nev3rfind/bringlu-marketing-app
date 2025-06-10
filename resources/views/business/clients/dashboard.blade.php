@@ -2,7 +2,7 @@
 @section('content')
 <div class="mt-8 text-center">
     <h1 class="font-medium leading-tight text-4xl mt-0 mb-2 text-bringlu-blue">
-        Dashboard for {{ $client->first_name }} {{ $client->last_name }}
+        Dashboard for {{ $client->display_name }}
     </h1>
     <p class="text-gray-600">Manage client dashboard metrics and values</p>
 </div>
