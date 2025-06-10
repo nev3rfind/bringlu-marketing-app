@@ -192,10 +192,6 @@ function viewClientReferralForm(formId) {
                         <label class="block text-sm font-medium text-foxecom-dark">Purchase Email</label>
                         <p class="mt-1 text-sm text-gray-900">${form.purchase_email}</p>
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-foxecom-dark">Referral Details</label>
-                        <p class="mt-1 text-sm text-gray-900">${form.referral_details}</p>
-                    </div>
                     <div>
                         <label class="block text-sm font-medium text-foxecom-dark">License Code</label>
                         <p class="mt-1 text-sm text-gray-900">${form.license_code || 'N/A'}</p>
@@ -203,7 +199,21 @@ function viewClientReferralForm(formId) {
                     ${form.shopify_store_url ? `
                     <div>
                         <label class="block text-sm font-medium text-foxecom-dark">Shopify Store URL</label>
-                        <p class="mt-1 text-sm text-gray-900">${form.shopify_store_url}</p>
+                        <p class="mt-1 text-sm text-gray-900">
+                            <a href="${form.shopify_store_url}" target="_blank" class="text-foxecom-orange hover:text-orange-600 underline">
+                                ${form.shopify_store_url}
+                            </a>
+                        </p>
+                    </div>
+                    ` : ''}
+                    ${form.proof_file_path ? `
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-foxecom-dark">Proof File</label>
+                        <p class="mt-1 text-sm text-gray-900">
+                            <a href="/storage/${form.proof_file_path}" target="_blank" class="text-foxecom-orange hover:text-orange-600 underline">
+                                View Uploaded File
+                            </a>
+                        </p>
                     </div>
                     ` : ''}
                     <div>

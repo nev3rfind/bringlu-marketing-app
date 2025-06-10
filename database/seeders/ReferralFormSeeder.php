@@ -118,6 +118,7 @@ class ReferralFormSeeder extends Seeder
                     'purchase_email' => $template['purchase_email'],
                     'license_code' => $template['license_code'],
                     'shopify_store_url' => $template['shopify_store_url'] ?? null,
+                    'proof_file_path' => 'referral_proofs/1749518982_minimog_theme.png', // Always use this file path
                     'status' => $template['status'],
                     'viewed' => rand(0, 1) == 1, // Random viewed status
                     'created_at' => Carbon::now()->subDays(rand(1, 30)), // Random date within last 30 days
