@@ -63,7 +63,7 @@ Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
 Route::prefix('/advertiser')->middleware('auth', 'authorise-adv')->group(function() {
     Route::get('', 'App\Http\Controllers\AdvertiserController@index')->name('advertiser.index');
     
-    // Referral form routes - FIXED: Added proper POST route
+    // Referral form routes
     Route::post('/referral/store', [AdvertiserController::class, 'storeReferralForm'])->name('advertiser.referral.store');
     Route::post('/referral/{form}/view', [AdvertiserController::class, 'viewReferralForm'])->name('advertiser.referral.view');
 });

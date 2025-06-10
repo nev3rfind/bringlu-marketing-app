@@ -17,12 +17,11 @@ return new class extends Migration
         Schema::create('referral_forms', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained();
-            $table->text('referral_details'); // For the text area question
-            $table->enum('theme_type', ['minimog', 'megamog', 'other']);
-            $table->string('other_theme')->nullable(); // For "Other" option
+            $table->enum('theme_type', ['minimog', 'megamog', 'zest', 'sleek', 'hyper']);
             $table->string('purchase_email'); // Email used to purchase theme
             $table->string('license_code')->nullable(); // Theme license code
             $table->string('shopify_store_url')->nullable(); // For non-Minimog/Megamog themes
+            $table->string('proof_file_path')->nullable(); // File upload path
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->boolean('viewed')->default(false);
             $table->timestamps();

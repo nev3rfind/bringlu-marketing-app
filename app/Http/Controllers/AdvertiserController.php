@@ -14,6 +14,7 @@ use App\Models\DashboardCard;
 use App\Models\DashboardCardValue;
 use App\Models\ReferralForm;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use PDF;
 
 class AdvertiserController extends Controller
@@ -169,22 +170,29 @@ class AdvertiserController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'referral_details' => 'required|string',
-                'theme_type' => 'required|in:minimog,megamog,other',
-                'other_theme' => 'required_if:theme_type,other|string|max:255',
+                'theme_type' => 'required|in:minimog,megamog,zest,sleek,hyper',
                 'purchase_email' => 'required|email|max:255',
                 'license_code' => 'required|string|max:255',
-                'shopify_store_url' => 'nullable|url|max:255'
+                'shopify_store_url' => 'nullable|url|max:255',
+                'proof_file' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf|max:2048'
             ]);
+
+            $proofFilePath = null;
+            
+            // Handle file upload if provided
+            if ($request->hasFile('proof_file')) {
+                $file = $request->file('proof_file');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $proofFilePath = $file->storeAs('referral_proofs', $filename, 'public');
+            }
 
             $referralForm = ReferralForm::create([
                 'user_id' => Auth::user()->id,
-                'referral_details' => $validatedData['referral_details'],
                 'theme_type' => $validatedData['theme_type'],
-                'other_theme' => $validatedData['theme_type'] === 'other' ? $validatedData['other_theme'] : null,
                 'purchase_email' => $validatedData['purchase_email'],
                 'license_code' => $validatedData['license_code'],
                 'shopify_store_url' => $validatedData['shopify_store_url'] ?? null,
+                'proof_file_path' => $proofFilePath,
                 'status' => 'pending',
                 'viewed' => false
             ]);

@@ -11,12 +11,11 @@ class ReferralForm extends Model
 
     protected $fillable = [
         'user_id',
-        'referral_details',
         'theme_type',
-        'other_theme',
         'purchase_email',
         'license_code',
         'shopify_store_url',
+        'proof_file_path',
         'status',
         'viewed'
     ];
@@ -46,8 +45,12 @@ class ReferralForm extends Model
                 return 'Minimog';
             case 'megamog':
                 return 'Megamog';
-            case 'other':
-                return $this->other_theme ?: 'Other';
+            case 'zest':
+                return 'Zest';
+            case 'sleek':
+                return 'Sleek';
+            case 'hyper':
+                return 'Hyper';
             default:
                 return 'Not specified';
         }

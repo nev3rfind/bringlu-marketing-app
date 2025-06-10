@@ -121,33 +121,19 @@
         <div id="referralModal" class="foxecom-modal hidden">
             <div class="foxecom-modal-content max-w-2xl">
                 <h3 class="text-lg font-medium text-foxecom-dark text-center mb-4">Submit Referral Form</h3>
-                <form action="{{ route('advertiser.referral.store') }}" id="referralForm">
-                    @csrf   
-                    <!-- Referral Details Text Area -->
-                    <div class="mb-6">
-                        <label for="referral_details" class="block text-sm font-medium text-foxecom-dark mb-2">
-                            Please provide details about your referral *
-                        </label>
-                        <textarea 
-                            id="referral_details" 
-                            name="referral_details" 
-                            rows="4"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
-                            placeholder="Your answer"
-                            required
-                        ></textarea>
-                    </div>
+                <form method="POST" action="{{ route('advertiser.referral.store') }}" id="referralForm" enctype="multipart/form-data">
+                    @csrf
 
                     <!-- Theme Type Selection -->
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-foxecom-dark mb-3">
-                            Which theme by FoxEcom are you referring? *
+                            Which FoxEcom's theme you've referred? *
                         </label>
                         <div class="space-y-3">
                             <div class="flex items-center">
                                 <input id="minimog_radio" type="radio" value="minimog" name="theme_type" 
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
-                                       onchange="toggleOtherThemeInput()" required>
+                                       onchange="toggleShopifyUrlInput()" required>
                                 <label for="minimog_radio" class="ml-3 text-sm font-medium text-foxecom-dark">
                                     Minimog
                                 </label>
@@ -155,21 +141,34 @@
                             <div class="flex items-center">
                                 <input id="megamog_radio" type="radio" value="megamog" name="theme_type" 
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
-                                       onchange="toggleOtherThemeInput()" required>
+                                       onchange="toggleShopifyUrlInput()" required>
                                 <label for="megamog_radio" class="ml-3 text-sm font-medium text-foxecom-dark">
                                     Megamog
                                 </label>
                             </div>
                             <div class="flex items-center">
-                                <input id="other_radio" type="radio" value="other" name="theme_type" 
+                                <input id="zest_radio" type="radio" value="zest" name="theme_type" 
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
-                                       onchange="toggleOtherThemeInput()" required>
-                                <label for="other_radio" class="ml-3 text-sm font-medium text-foxecom-dark">
-                                    Other:
+                                       onchange="toggleShopifyUrlInput()" required>
+                                <label for="zest_radio" class="ml-3 text-sm font-medium text-foxecom-dark">
+                                    Zest
                                 </label>
-                                <input type="text" name="other_theme" id="other_theme_input" 
-                                       class="ml-2 flex-1 border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
-                                       placeholder="Please specify" style="display: none;">
+                            </div>
+                            <div class="flex items-center">
+                                <input id="sleek_radio" type="radio" value="sleek" name="theme_type" 
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
+                                       onchange="toggleShopifyUrlInput()" required>
+                                <label for="sleek_radio" class="ml-3 text-sm font-medium text-foxecom-dark">
+                                    Sleek
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="hyper_radio" type="radio" value="hyper" name="theme_type" 
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300"
+                                       onchange="toggleShopifyUrlInput()" required>
+                                <label for="hyper_radio" class="ml-3 text-sm font-medium text-foxecom-dark">
+                                    Hyper
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -225,6 +224,23 @@
                             name="shopify_store_url" 
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
                             placeholder="https://yourstore.myshopify.com"
+                        >
+                    </div>
+
+                    <!-- Proof File Upload -->
+                    <div class="mb-6">
+                        <label for="proof_file" class="block text-sm font-medium text-foxecom-dark mb-2">
+                            Any proof of referral (screenshot...)
+                        </label>
+                        <p class="text-xs text-gray-500 mb-3">
+                            Upload a screenshot or any proof of your referral (optional)
+                        </p>
+                        <input 
+                            type="file" 
+                            id="proof_file" 
+                            name="proof_file" 
+                            accept="image/*,.pdf"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-foxecom-orange"
                         >
                     </div>
                     
@@ -306,7 +322,7 @@
         function closeReferralModal() {
             document.getElementById('referralModal').classList.add('hidden');
             document.getElementById('referralForm').reset();
-            toggleOtherThemeInput(); // Reset other theme input visibility
+            toggleShopifyUrlInput(); // Reset shopify URL input visibility
         }
 
         function closeReferralSuccessModal() {
@@ -315,32 +331,19 @@
             window.location.reload();
         }
 
-        function toggleOtherThemeInput() {
-            const otherRadio = document.getElementById('other_radio');
-            const otherInput = document.getElementById('other_theme_input');
-            const shopifySection = document.getElementById('shopify_url_section');
+        function toggleShopifyUrlInput() {
             const minimogRadio = document.getElementById('minimog_radio');
             const megamogRadio = document.getElementById('megamog_radio');
+            const shopifySection = document.getElementById('shopify_url_section');
             
-            if (otherRadio.checked) {
-                otherInput.style.display = 'block';
-                otherInput.required = true;
+            // Show Shopify URL section for non-Minimog/Megamog themes
+            if (!minimogRadio.checked && !megamogRadio.checked) {
                 shopifySection.style.display = 'block';
                 document.getElementById('shopify_store_url').required = true;
             } else {
-                otherInput.style.display = 'none';
-                otherInput.required = false;
-                otherInput.value = '';
-                
-                // Show Shopify URL section for non-Minimog/Megamog themes
-                if (!minimogRadio.checked && !megamogRadio.checked) {
-                    shopifySection.style.display = 'block';
-                    document.getElementById('shopify_store_url').required = true;
-                } else {
-                    shopifySection.style.display = 'none';
-                    document.getElementById('shopify_store_url').required = false;
-                    document.getElementById('shopify_store_url').value = '';
-                }
+                shopifySection.style.display = 'none';
+                document.getElementById('shopify_store_url').required = false;
+                document.getElementById('shopify_store_url').value = '';
             }
         }
 
@@ -356,18 +359,15 @@
             submitBtn.disabled = true;
             submitText.textContent = 'Submitting...';
             submitSpinner.classList.remove('hidden');
-
-            console.log('Submitted form:',this);
             
             const formData = new FormData(this);
-
-            console.log('Form data:',formData);
             
             fetch('{{ route("advertiser.referral.store") }}', {
-                method:'POST',
+                method: 'POST',
                 body: formData,
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
             .then(response => {
@@ -423,10 +423,6 @@
                                 <label class="block text-sm font-medium text-foxecom-dark">Theme Type</label>
                                 <p class="mt-1 text-sm text-gray-900">${form.theme_type_text}</p>
                             </div>
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-foxecom-dark">Referral Details</label>
-                                <p class="mt-1 text-sm text-gray-900">${form.referral_details}</p>
-                            </div>
                             <div>
                                 <label class="block text-sm font-medium text-foxecom-dark">Purchase Email</label>
                                 <p class="mt-1 text-sm text-gray-900">${form.purchase_email}</p>
@@ -439,6 +435,16 @@
                             <div class="md:col-span-2">
                                 <label class="block text-sm font-medium text-foxecom-dark">Shopify Store URL</label>
                                 <p class="mt-1 text-sm text-gray-900">${form.shopify_store_url}</p>
+                            </div>
+                            ` : ''}
+                            ${form.proof_file_path ? `
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-foxecom-dark">Proof File</label>
+                                <p class="mt-1 text-sm text-gray-900">
+                                    <a href="/storage/${form.proof_file_path}" target="_blank" class="text-foxecom-orange hover:text-orange-600 underline">
+                                        View Uploaded File
+                                    </a>
+                                </p>
                             </div>
                             ` : ''}
                             <div>
