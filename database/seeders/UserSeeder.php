@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
             'company_name' => 'FoxEcom',
             'company_website' => 'https://foxecom.com',
             'paypal_email' => 'admin@foxecom.com',
-            'commission_structure' => json_encode(['megamog', 'minimog']),
+            'commission_structure_id' => 2, // Megamog
             'company_type_id' => 2, // Business customer (admin)
             'account_type' => 2, // Business
             'remember_token' => null,
@@ -49,7 +49,7 @@ class UserSeeder extends Seeder
                 'company_name' => 'Smith Development',
                 'company_website' => 'https://smithdev.com',
                 'paypal_email' => 'john.smith@paypal.com',
-                'commission_structure' => json_encode(['megamog']),
+                'commission_structure_id' => 2, // Megamog
                 'company_type_id' => 1,
                 'account_type' => 1,
             ],
@@ -62,7 +62,7 @@ class UserSeeder extends Seeder
                 'company_name' => 'Johnson Digital Agency',
                 'company_website' => 'https://johnsondigital.com',
                 'paypal_email' => 'sarah.johnson@paypal.com',
-                'commission_structure' => json_encode(['minimog']),
+                'commission_structure_id' => 1, // Minimog
                 'company_type_id' => 1,
                 'account_type' => 1,
             ],
@@ -75,7 +75,7 @@ class UserSeeder extends Seeder
                 'company_name' => 'Brown E-commerce',
                 'company_website' => 'https://brownecommerce.com',
                 'paypal_email' => 'michael.brown@paypal.com',
-                'commission_structure' => json_encode(['megamog', 'minimog']),
+                'commission_structure_id' => 3, // Zest
                 'company_type_id' => 1,
                 'account_type' => 1,
             ],
@@ -88,7 +88,7 @@ class UserSeeder extends Seeder
                 'company_name' => 'Davis Web Solutions',
                 'company_website' => 'https://davisweb.com',
                 'paypal_email' => 'emily.davis@paypal.com',
-                'commission_structure' => json_encode(['minimog']),
+                'commission_structure_id' => 1, // Minimog
                 'company_type_id' => 1,
                 'account_type' => 1,
             ],
@@ -101,7 +101,7 @@ class UserSeeder extends Seeder
                 'company_name' => 'Wilson Creative Agency',
                 'company_website' => 'https://wilsoncreative.com',
                 'paypal_email' => 'david.wilson@paypal.com',
-                'commission_structure' => json_encode(['megamog']),
+                'commission_structure_id' => 4, // Sleek
                 'company_type_id' => 1,
                 'account_type' => 1,
             ],
@@ -110,12 +110,12 @@ class UserSeeder extends Seeder
                 'last_name' => 'Miller',
                 'phone' => '+1234567895',
                 'email' => 'lisa.miller@example.com',
-                'title' => 'Freelancer',
+                'title' => 'Freelance Web Designer',
                 'other_title' => 'Freelance Web Designer',
                 'company_name' => 'Miller Design Studio',
                 'company_website' => 'https://millerdesign.com',
                 'paypal_email' => 'lisa.miller@paypal.com',
-                'commission_structure' => json_encode(['minimog']),
+                'commission_structure_id' => 1, // Minimog
                 'company_type_id' => 1,
                 'account_type' => 1,
             ],
@@ -128,7 +128,7 @@ class UserSeeder extends Seeder
                 'company_name' => 'Garcia Online Store',
                 'company_website' => 'https://garciastore.com',
                 'paypal_email' => 'robert.garcia@paypal.com',
-                'commission_structure' => json_encode(['megamog', 'minimog']),
+                'commission_structure_id' => 5, // Hyper
                 'company_type_id' => 1,
                 'account_type' => 1,
             ],
@@ -141,7 +141,7 @@ class UserSeeder extends Seeder
                 'company_name' => 'Martinez Digital',
                 'company_website' => 'https://martinezdigital.com',
                 'paypal_email' => 'jennifer.martinez@paypal.com',
-                'commission_structure' => json_encode(['megamog']),
+                'commission_structure_id' => 2, // Megamog
                 'company_type_id' => 1,
                 'account_type' => 1,
             ],
@@ -154,7 +154,7 @@ class UserSeeder extends Seeder
                 'company_name' => 'Anderson Tech',
                 'company_website' => 'https://andersontech.com',
                 'paypal_email' => 'james.anderson@paypal.com',
-                'commission_structure' => json_encode(['minimog']),
+                'commission_structure_id' => 1, // Minimog
                 'company_type_id' => 1,
                 'account_type' => 1,
             ],
@@ -163,12 +163,12 @@ class UserSeeder extends Seeder
                 'last_name' => 'Rodriguez',
                 'phone' => '+1234567899',
                 'email' => 'maria.rodriguez@example.com',
-                'title' => 'Consultant',
+                'title' => 'E-commerce Consultant',
                 'other_title' => 'E-commerce Consultant',
                 'company_name' => 'Rodriguez Consulting',
                 'company_website' => 'https://rodriguezconsulting.com',
                 'paypal_email' => 'maria.rodriguez@paypal.com',
-                'commission_structure' => json_encode(['megamog', 'minimog']),
+                'commission_structure_id' => 3, // Zest
                 'company_type_id' => 1,
                 'account_type' => 1,
             ],

@@ -208,14 +208,30 @@
                     <!-- Commission Structure -->
                     <div>
                         <label class="block text-sm font-medium text-foxecom-dark mb-3">Commission Structure *</label>
-                        <p class="text-sm text-foxecom-gray mb-4">Select the themes you're interested in promoting:</p>
+                        <p class="text-sm text-foxecom-gray mb-4">Select the theme you're most interested in promoting:</p>
                         
                         <div class="space-y-4">
+                            <!-- Minimog Theme -->
+                            <div class="flex items-start p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <input id="minimog" type="radio" value="1" name="commission_structure_id" 
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1"
+                                       {{ old('commission_structure_id') == '1' ? 'checked' : '' }}>
+                                <div class="ml-3 flex-1">
+                                    <label for="minimog" class="text-sm font-medium text-foxecom-dark">
+                                        Commission Structure for <a href="https://foxecom.com/products/minimog-shopify-theme" target="_blank" class="text-foxecom-orange hover:text-orange-600 underline">Minimog theme</a>
+                                    </label>
+                                    <div class="mt-2">
+                                        <img src="{{ asset('images/minimog_theme.png') }}" alt="Minimog Theme" 
+                                             class="w-full max-w-md rounded-lg shadow-sm">
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Megamog Theme -->
                             <div class="flex items-start p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                <input id="megamog" type="checkbox" value="megamog" name="commission_structure[]" 
+                                <input id="megamog" type="radio" value="2" name="commission_structure_id" 
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1"
-                                       {{ in_array('megamog', old('commission_structure', [])) ? 'checked' : '' }}>
+                                       {{ old('commission_structure_id') == '2' ? 'checked' : '' }}>
                                 <div class="ml-3 flex-1">
                                     <label for="megamog" class="text-sm font-medium text-foxecom-dark">
                                         Commission Structure for <a href="https://foxecom.com/products/megamog-shopify-theme" target="_blank" class="text-foxecom-orange hover:text-orange-600 underline">Megamog theme</a>
@@ -227,23 +243,43 @@
                                 </div>
                             </div>
 
-                            <!-- Minimog Theme -->
+                            <!-- Zest Theme -->
                             <div class="flex items-start p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                <input id="minimog" type="checkbox" value="minimog" name="commission_structure[]" 
+                                <input id="zest" type="radio" value="3" name="commission_structure_id" 
                                        class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1"
-                                       {{ in_array('minimog', old('commission_structure', [])) ? 'checked' : '' }}>
+                                       {{ old('commission_structure_id') == '3' ? 'checked' : '' }}>
                                 <div class="ml-3 flex-1">
-                                    <label for="minimog" class="text-sm font-medium text-foxecom-dark">
-                                        Commission Structure for <a href="https://foxecom.com/products/minimog-shopify-theme" target="_blank" class="text-foxecom-orange hover:text-orange-600 underline">Minimog theme</a>
+                                    <label for="zest" class="text-sm font-medium text-foxecom-dark">
+                                        Commission Structure for Zest theme
                                     </label>
-                                    <div class="mt-2">
-                                        <img src="{{ asset('images/minimog_theme.png') }}" alt="Minimog Theme" 
-                                             class="w-full max-w-md rounded-lg shadow-sm">
-                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sleek Theme -->
+                            <div class="flex items-start p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <input id="sleek" type="radio" value="4" name="commission_structure_id" 
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1"
+                                       {{ old('commission_structure_id') == '4' ? 'checked' : '' }}>
+                                <div class="ml-3 flex-1">
+                                    <label for="sleek" class="text-sm font-medium text-foxecom-dark">
+                                        Commission Structure for Sleek theme
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Hyper Theme -->
+                            <div class="flex items-start p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <input id="hyper" type="radio" value="5" name="commission_structure_id" 
+                                       class="h-4 w-4 text-foxecom-orange focus:ring-foxecom-orange border-gray-300 rounded mt-1"
+                                       {{ old('commission_structure_id') == '5' ? 'checked' : '' }}>
+                                <div class="ml-3 flex-1">
+                                    <label for="hyper" class="text-sm font-medium text-foxecom-dark">
+                                        Commission Structure for Hyper theme
+                                    </label>
                                 </div>
                             </div>
                         </div>
-                        @error('commission_structure')
+                        @error('commission_structure_id')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

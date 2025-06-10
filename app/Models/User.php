@@ -31,7 +31,7 @@ class User extends Authenticatable
         'company_name',
         'company_website',
         'paypal_email',
-        'commission_structure',
+        'commission_structure_id',
         'other_title',
         'company_type_id'
     ];
@@ -54,7 +54,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'created_date' => 'datetime',
-        'commission_structure' => 'array',
     ];
 
     // User can have many adverts
@@ -68,20 +67,19 @@ class User extends Authenticatable
       }
 
     /**
-     * Get the commission structure themes as a formatted string
+     * Get the commission structure theme as a formatted string
      */
     public function getCommissionStructureTextAttribute()
     {
-        if (!$this->commission_structure) {
-            return 'None selected';
-        }
+        $themes = [
+            1 => 'Minimog Theme',
+            2 => 'Megamog Theme', 
+            3 => 'Zest Theme',
+            4 => 'Sleek Theme',
+            5 => 'Hyper Theme'
+        ];
         
-        $themes = [];
-        foreach ($this->commission_structure as $theme) {
-            $themes[] = ucfirst($theme) . ' Theme';
-        }
-        
-        return implode(', ', $themes);
+        return $themes[$this->commission_structure_id] ?? 'None selected';
     }
 
     /**
