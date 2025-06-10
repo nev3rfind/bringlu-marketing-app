@@ -36,7 +36,7 @@ require __DIR__.'/auth.php';
 
 // Business customer routes 
 Route::prefix('')->middleware('auth', 'authorise-business')->group(function() {
-    Route::resource('/business', BusinessController::class)->parameters(['business' => 'advert']);
+    Route::get('/business', [BusinessController::class, 'index'])->name('business.index');
     Route::get('/business/ads/pending', 'App\Http\Controllers\BusinessController@showPending')->name('adverts.pending');
     Route::put('/business/ads/{user}/pending/confirm/{advert}', 'App\Http\Controllers\BusinessController@confirmPending')->name('adverts.pending.confirm');
     Route::put('/business/ads/{user}/pending/reject/{advert}', 'App\Http\Controllers\BusinessController@rejectPending')->name('adverts.pending.reject');
